@@ -11,52 +11,54 @@ Screens:
             X: =0
             Y: =0
             Width: =Parent.Width
-            Height: =110
+            Height: =70
       - icoVoltarFech:
           Control: Classic/Icon@2.5.0
           Properties:
             Icon: =Icon.ChevronLeft
             Color: =Color.White
             OnSelect: =Navigate(scrInicio, ScreenTransition.None)
-            X: =15
-            Y: =25
-            Width: =60
-            Height: =60
+            X: =6
+            Y: =10
+            Width: =50
+            Height: =50
       - lblTituloFech:
           Control: Label@2.5.1
           Properties:
-            Text: ="Fechamento do Dia"
+            Text: |-
+              ="Fechamento do Dia"
             Color: =Color.White
-            Size: =22
+            Size: =18
             FontWeight: =FontWeight.Bold
-            X: =85
-            Y: =25
-            Width: =540
-            Height: =60
-
+            X: =60
+            Y: =10
+            Width: =Parent.Width - 70
+            Height: =50
       - dpFech:
           Control: Classic/DatePicker@2.6.0
           Properties:
             DefaultDate: =Today()
-            Format: ="dd/mm/yyyy"
+            Format: |-
+              ="dd/mm/yyyy"
             OnChange: =Select(btnCarregarFech)
-            Size: =15
-            X: =30
-            Y: =125
-            Width: =330
-            Height: =60
+            Size: =13
+            X: =X0
+            Y: =78
+            Width: =ColE * 0.55
+            Height: =48
       - btnCarregarFech:
           Control: Classic/Button@2.2.0
           Properties:
-            Text: ="CARREGAR"
+            Text: |-
+              ="CARREGAR"
             Fill: =CorEscura
             Color: =Color.White
-            Size: =15
+            Size: =13
             FontWeight: =FontWeight.Bold
-            X: =375
-            Y: =125
-            Width: =235
-            Height: =60
+            X: =X0 + ColE * 0.58
+            Y: =78
+            Width: =ColE * 0.42
+            Height: =48
             OnSelect: |-
               =With(
                   {d: Text(dpFech.SelectedDate, "yyyy-mm-dd")},
@@ -64,108 +66,112 @@ Screens:
                   ClearCollect(colContFech, Filter(ContagemDiaria, DataRef = d))
               );
               Reset(txtDisp); Reset(txtPresas); Reset(txtFrotasDisp); Reset(txtFrotasManut); Reset(txtObs)
-
-      # ------------------------------------------------------------ Entradas manuais (dados do SAP / frota)
       - lblDisp:
           Control: Label@2.5.1
           Properties:
-            Text: ="Disponíveis para faturamento"
-            Size: =13
-            X: =30
-            Y: =200
-            Width: =380
-            Height: =55
+            Text: |-
+              ="Disponíveis para faturamento"
+            Size: =12
+            X: =X0
+            Y: =136
+            Width: =ColE * 0.6
+            Height: =48
       - txtDisp:
           Control: Classic/TextInput@2.3.2
           Properties:
             Default: =If(IsBlank(varResumoF), "", Text(varResumoF.Disponiveis))
             Format: =TextFormat.Number
-            Size: =16
-            X: =420
-            Y: =200
-            Width: =190
-            Height: =55
+            Size: =14
+            X: =X0 + ColE * 0.62
+            Y: =136
+            Width: =ColE * 0.38
+            Height: =48
       - lblPresas:
           Control: Label@2.5.1
           Properties:
-            Text: ="Presas J1BNFE / VF04"
-            Size: =13
-            X: =30
-            Y: =265
-            Width: =380
-            Height: =55
+            Text: |-
+              ="Presas J1BNFE / VF04"
+            Size: =12
+            X: =X0
+            Y: =192
+            Width: =ColE * 0.6
+            Height: =48
       - txtPresas:
           Control: Classic/TextInput@2.3.2
           Properties:
             Default: =If(IsBlank(varResumoF), "", Text(varResumoF.PresasJ1BNFE))
             Format: =TextFormat.Number
-            Size: =16
-            X: =420
-            Y: =265
-            Width: =190
-            Height: =55
+            Size: =14
+            X: =X0 + ColE * 0.62
+            Y: =192
+            Width: =ColE * 0.38
+            Height: =48
       - lblFrotasDisp:
           Control: Label@2.5.1
           Properties:
-            Text: ="Frotas disponíveis"
-            Size: =13
-            X: =30
-            Y: =330
-            Width: =380
-            Height: =55
+            Text: |-
+              ="Frotas disponíveis"
+            Size: =12
+            X: =X0
+            Y: =248
+            Width: =ColE * 0.6
+            Height: =48
       - txtFrotasDisp:
           Control: Classic/TextInput@2.3.2
           Properties:
             Default: =If(IsBlank(varResumoF), "", Text(varResumoF.FrotasDisponiveis))
             Format: =TextFormat.Number
-            Size: =16
-            X: =420
-            Y: =330
-            Width: =190
-            Height: =55
+            Size: =14
+            X: =X0 + ColE * 0.62
+            Y: =248
+            Width: =ColE * 0.38
+            Height: =48
       - lblFrotasManut:
           Control: Label@2.5.1
           Properties:
-            Text: ="Frotas em manutenção"
-            Size: =13
-            X: =30
-            Y: =395
-            Width: =380
-            Height: =55
+            Text: |-
+              ="Frotas em manutenção"
+            Size: =12
+            X: =X0
+            Y: =304
+            Width: =ColE * 0.6
+            Height: =48
       - txtFrotasManut:
           Control: Classic/TextInput@2.3.2
           Properties:
             Default: =If(IsBlank(varResumoF), "", Text(varResumoF.FrotasManutencao))
             Format: =TextFormat.Number
-            Size: =16
-            X: =420
-            Y: =395
-            Width: =190
-            Height: =55
+            Size: =14
+            X: =X0 + ColE * 0.62
+            Y: =304
+            Width: =ColE * 0.38
+            Height: =48
       - txtObs:
           Control: Classic/TextInput@2.3.2
           Properties:
             Default: =If(IsBlank(varResumoF), "", varResumoF.Observacao)
-            HintText: ="Observações do dia"
+            HintText: |-
+              ="Observações do dia"
             MaxLength: =255
             Mode: =TextMode.MultiLine
-            Size: =13
-            X: =30
-            Y: =465
-            Width: =580
-            Height: =100
+            Size: =12
+            X: =X0
+            Y: =360
+            Width: =ColE
+            Height: =70
       - btnSalvarFech:
           Control: Classic/Button@2.2.0
           Properties:
-            Text: ="SALVAR"
+            Text: |-
+              ="SALVAR"
             Fill: =CorPrimaria
             Color: =Color.White
-            Size: =18
+            Size: =16
             FontWeight: =FontWeight.Bold
-            X: =30
-            Y: =580
-            Width: =580
-            Height: =75
+            X: =X0
+            Y: =440
+            Width: =ColE
+            Height: =52
             OnSelect: |-
               =With(
                   {d: Text(dpFech.SelectedDate, "yyyy-mm-dd")},
@@ -193,22 +199,20 @@ Screens:
                       )
                   )
               )
-
-      # ------------------------------------------------------------ Quadro-resumo (igual ao da planilha)
       - lblQuadro:
           Control: Label@2.5.1
           Properties:
             Fill: =Color.White
             BorderColor: =CorPrimaria
             BorderThickness: =2
-            Size: =14
+            Size: =12
             PaddingLeft: =20
             VerticalAlign: =VerticalAlign.Top
             PaddingTop: =15
-            X: =30
-            Y: =675
-            Width: =580
-            Height: =390
+            X: =If(Largo, ColDX, X0)
+            Y: =If(Largo, 78, 502)
+            Width: =If(Largo, ColDW, Conteudo)
+            Height: =If(Largo, 420, Parent.Height - 510)
             Text: |-
               =With(
                   {

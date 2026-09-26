@@ -4,7 +4,6 @@ Screens:
       Fill: =CorFundo
       OnVisible: =SetFocus(txtChave)
     Children:
-      # ------------------------------------------------------------ Cabeçalho
       - rectHeaderBip:
           Control: Rectangle@2.3.0
           Properties:
@@ -12,121 +11,123 @@ Screens:
             X: =0
             Y: =0
             Width: =Parent.Width
-            Height: =110
+            Height: =70
       - icoVoltarBip:
           Control: Classic/Icon@2.5.0
           Properties:
             Icon: =Icon.ChevronLeft
             Color: =Color.White
             OnSelect: =Navigate(scrInicio, ScreenTransition.None)
-            X: =15
-            Y: =25
-            Width: =60
-            Height: =60
+            X: =6
+            Y: =10
+            Width: =50
+            Height: =50
       - lblTituloBip:
           Control: Label@2.5.1
           Properties:
-            Text: ="Controle de Notas Fiscais"
+            Text: |-
+              ="Controle de Notas Fiscais"
             Color: =Color.White
-            Size: =22
+            Size: =18
             FontWeight: =FontWeight.Bold
-            X: =85
-            Y: =12
-            Width: =540
-            Height: =50
+            X: =60
+            Y: =4
+            Width: =Parent.Width - 70
+            Height: =36
       - lblDataBip:
           Control: Label@2.5.1
           Properties:
             Text: |-
               ="Operação: " & Text(Today(), "dd/mm/yyyy") & "  •  " & User().FullName
             Color: =Color.White
-            Size: =12
-            X: =85
-            Y: =60
-            Width: =540
-            Height: =35
-
-      # ------------------------------------------------------------ Status (categoria)
+            Size: =11
+            X: =60
+            Y: =38
+            Width: =Parent.Width - 70
+            Height: =28
       - lblStatusTit:
           Control: Label@2.5.1
           Properties:
-            Text: ="Status da NF (vale para as próximas bipagens):"
-            Size: =13
-            X: =30
-            Y: =120
-            Width: =580
-            Height: =40
+            Text: |-
+              ="Status da NF (vale para as próximas bipagens):"
+            Size: =12
+            X: =X0
+            Y: =74
+            Width: =ColE
+            Height: =30
       - btnCatF:
           Control: Classic/Button@2.2.0
           Properties:
-            Text: ="FATURADA"
+            Text: |-
+              ="FATURADA"
             OnSelect: =Set(varCategoria, LookUp(Categorias, Cod = "FATURADA")); SetFocus(txtChave)
             Fill: =If(varCategoria.Cod = "FATURADA", LookUp(Categorias, Cod = "FATURADA").Cor, Color.White)
             Color: =If(varCategoria.Cod = "FATURADA", Color.White, LookUp(Categorias, Cod = "FATURADA").Cor)
             BorderColor: =LookUp(Categorias, Cod = "FATURADA").Cor
             BorderThickness: =2
-            Size: =13
+            Size: =If(Largo, 12, 10)
             FontWeight: =FontWeight.Bold
-            X: =30
-            Y: =160
-            Width: =137
-            Height: =60
+            X: =X0 + 0 * (((ColE - 24) / 4) + 8)
+            Y: =106
+            Width: =((ColE - 24) / 4)
+            Height: =48
       - btnCatI:
           Control: Classic/Button@2.2.0
           Properties:
-            Text: ="INSUCESSO"
+            Text: |-
+              ="INSUCESSO"
             OnSelect: =Set(varCategoria, LookUp(Categorias, Cod = "INSUCESSO")); SetFocus(txtChave)
             Fill: =If(varCategoria.Cod = "INSUCESSO", LookUp(Categorias, Cod = "INSUCESSO").Cor, Color.White)
             Color: =If(varCategoria.Cod = "INSUCESSO", Color.White, LookUp(Categorias, Cod = "INSUCESSO").Cor)
             BorderColor: =LookUp(Categorias, Cod = "INSUCESSO").Cor
             BorderThickness: =2
-            Size: =13
+            Size: =If(Largo, 12, 10)
             FontWeight: =FontWeight.Bold
-            X: =177
-            Y: =160
-            Width: =137
-            Height: =60
+            X: =X0 + 1 * (((ColE - 24) / 4) + 8)
+            Y: =106
+            Width: =((ColE - 24) / 4)
+            Height: =48
       - btnCatR:
           Control: Classic/Button@2.2.0
           Properties:
-            Text: ="RESGATE"
+            Text: |-
+              ="RESGATE"
             OnSelect: =Set(varCategoria, LookUp(Categorias, Cod = "RESGATE")); SetFocus(txtChave)
             Fill: =If(varCategoria.Cod = "RESGATE", LookUp(Categorias, Cod = "RESGATE").Cor, Color.White)
             Color: =If(varCategoria.Cod = "RESGATE", Color.White, LookUp(Categorias, Cod = "RESGATE").Cor)
             BorderColor: =LookUp(Categorias, Cod = "RESGATE").Cor
             BorderThickness: =2
-            Size: =13
+            Size: =If(Largo, 12, 10)
             FontWeight: =FontWeight.Bold
-            X: =324
-            Y: =160
-            Width: =137
-            Height: =60
+            X: =X0 + 2 * (((ColE - 24) / 4) + 8)
+            Y: =106
+            Width: =((ColE - 24) / 4)
+            Height: =48
       - btnCatM:
           Control: Classic/Button@2.2.0
           Properties:
-            Text: ="MARKETPLACE"
+            Text: =If(App.Width >= 520, "MARKETPLACE", "MP")
             OnSelect: =Set(varCategoria, LookUp(Categorias, Cod = "MARKETPLACE")); SetFocus(txtChave)
             Fill: =If(varCategoria.Cod = "MARKETPLACE", LookUp(Categorias, Cod = "MARKETPLACE").Cor, Color.White)
             Color: =If(varCategoria.Cod = "MARKETPLACE", Color.White, LookUp(Categorias, Cod = "MARKETPLACE").Cor)
             BorderColor: =LookUp(Categorias, Cod = "MARKETPLACE").Cor
             BorderThickness: =2
-            Size: =12
+            Size: =If(Largo, 12, 10)
             FontWeight: =FontWeight.Bold
-            X: =471
-            Y: =160
-            Width: =139
-            Height: =60
-
-      # ------------------------------------------------------------ Itinerário
+            X: =X0 + 3 * (((ColE - 24) / 4) + 8)
+            Y: =106
+            Width: =((ColE - 24) / 4)
+            Height: =48
       - lblItinTit:
           Control: Label@2.5.1
           Properties:
-            Text: ="Itinerário:"
-            Size: =13
-            X: =30
-            Y: =230
-            Width: =580
-            Height: =40
+            Text: |-
+              ="Itinerário:"
+            Size: =12
+            X: =X0
+            Y: =160
+            Width: =ColE
+            Height: =28
       - lblItinSel:
           Control: Label@2.5.1
           Properties:
@@ -141,49 +142,50 @@ Screens:
             BorderColor: =If(IsBlank(varItin), RGBA(239, 108, 0, 1), CorPrimaria)
             BorderThickness: =2
             FontWeight: =If(IsBlank(varItin), FontWeight.Normal, FontWeight.Bold)
-            Size: =13
+            Size: =12
             PaddingLeft: =12
-            X: =30
-            Y: =270
-            Width: =440
-            Height: =80
+            X: =X0
+            Y: =188
+            Width: =ColE - 110
+            Height: =64
       - btnListaItin:
           Control: Classic/Button@2.2.0
           Properties:
-            Text: ="LISTA"
+            Text: |-
+              ="LISTA"
             OnSelect: =Clear(colMatchItin); Set(varMostrarItins, true)
             Fill: =CorEscura
             Color: =Color.White
-            Size: =15
+            Size: =14
             FontWeight: =FontWeight.Bold
-            X: =480
-            Y: =270
-            Width: =130
-            Height: =80
-
-      # ------------------------------------------------------------ Campo de bipagem
+            X: =X0 + ColE - 100
+            Y: =188
+            Width: =100
+            Height: =64
       - lblChaveTit:
           Control: Label@2.5.1
           Properties:
-            Text: ="Bipe a Chave de Acesso (ou o código do itinerário):"
-            Size: =13
-            X: =30
-            Y: =360
-            Width: =580
-            Height: =40
+            Text: |-
+              ="Bipe a Chave de Acesso (ou o código do itinerário):"
+            Size: =12
+            X: =X0
+            Y: =258
+            Width: =ColE
+            Height: =28
       - txtChave:
           Control: Classic/TextInput@2.3.2
           Properties:
-            Default: =""
-            HintText: ="Chave da Nota Fiscal"
-            Size: =16
+            Default: |-
+              =""
+            HintText: |-
+              ="Chave da Nota Fiscal"
+            Size: =15
             BorderColor: =CorEscura
             BorderThickness: =2
-            X: =30
-            Y: =400
-            Width: =580
-            Height: =70
-            # A bipadora (modo teclado) envia ENTER no fim => dispara OnChange
+            X: =X0
+            Y: =286
+            Width: =ColE
+            Height: =56
             OnChange: |-
               =With(
                   {c: Substitute(Substitute(Trim(Self.Text), " ", ""), Char(9), "")},
@@ -240,22 +242,20 @@ Screens:
               );
               Reset(Self);
               SetFocus(Self)
-
-      # ------------------------------------------------------------ Lista de NFs bipadas
       - galBipadas:
           Control: Gallery@2.15.0
           Variant: Vertical
           Properties:
             Items: =Sort(colBipadas, Hora, SortOrder.Descending)
-            TemplateSize: =70
+            TemplateSize: =64
             TemplatePadding: =0
             Fill: =Color.White
             BorderColor: =RGBA(200, 200, 200, 1)
             BorderThickness: =1
-            X: =30
-            Y: =485
-            Width: =580
-            Height: =430
+            X: =If(Largo, ColDX, X0)
+            Y: =If(Largo, 74, 350)
+            Width: =If(Largo, ColDW, Conteudo)
+            Height: =If(Largo, Parent.Height - 114, Parent.Height - 500)
           Children:
             - rectCatCor:
                 Control: Rectangle@2.3.0
@@ -263,29 +263,29 @@ Screens:
                   Fill: =LookUp(Categorias, Cod = ThisItem.Categoria).Cor
                   X: =0
                   Y: =8
-                  Width: =8
-                  Height: =54
+                  Width: =6
+                  Height: =48
             - lblNF:
                 Control: Label@2.5.1
                 Properties:
                   Text: |-
                     ="NF " & ThisItem.Numero & "  •  Série " & ThisItem.Serie
-                  Size: =14
+                  Size: =13
                   FontWeight: =FontWeight.Bold
-                  X: =18
-                  Y: =4
-                  Width: =360
-                  Height: =34
+                  X: =14
+                  Y: =2
+                  Width: =Parent.TemplateWidth - 170
+                  Height: =32
             - lblChaveItem:
                 Control: Label@2.5.1
                 Properties:
                   Text: =ThisItem.Chave
                   Size: =9
                   Color: =RGBA(110, 110, 110, 1)
-                  X: =18
-                  Y: =36
-                  Width: =480
-                  Height: =28
+                  X: =14
+                  Y: =32
+                  Width: =Parent.TemplateWidth - 60
+                  Height: =26
             - lblCatItem:
                 Control: Label@2.5.1
                 Properties:
@@ -294,20 +294,20 @@ Screens:
                   FontWeight: =FontWeight.Bold
                   Size: =11
                   Align: =Align.Right
-                  X: =370
-                  Y: =4
-                  Width: =140
-                  Height: =34
+                  X: =Parent.TemplateWidth - 160
+                  Y: =2
+                  Width: =110
+                  Height: =32
             - icoRemover:
                 Control: Classic/Icon@2.5.0
                 Properties:
                   Icon: =Icon.Cancel
                   Color: =RGBA(198, 40, 40, 1)
                   OnSelect: =Remove(colBipadas, ThisItem); SetFocus(txtChave)
-                  X: =520
-                  Y: =15
-                  Width: =40
-                  Height: =40
+                  X: =Parent.TemplateWidth - 46
+                  Y: =14
+                  Width: =36
+                  Height: =36
             - sepItem:
                 Control: Rectangle@2.3.0
                 Properties:
@@ -316,7 +316,6 @@ Screens:
                   Y: =Parent.TemplateHeight - 1
                   Width: =Parent.TemplateWidth
                   Height: =1
-
       - lblQtd:
           Control: Label@2.5.1
           Properties:
@@ -327,30 +326,29 @@ Screens:
               "   R: " & CountRows(Filter(colBipadas, Categoria = "RESGATE")) &
               "   MP: " & CountRows(Filter(colBipadas, Categoria = "MARKETPLACE"))
             FontWeight: =FontWeight.Bold
-            Size: =14
+            Size: =13
             Align: =Align.Center
-            X: =30
-            Y: =920
-            Width: =580
-            Height: =45
-
-      # ------------------------------------------------------------ Ações
+            X: =X0
+            Y: =If(Largo, 350, Parent.Height - 146)
+            Width: =ColE
+            Height: =36
       - btnLimpar:
           Control: Classic/Button@2.2.0
           Properties:
-            Text: ="LIMPAR"
+            Text: |-
+              ="LIMPAR"
             OnSelect: =Clear(colBipadas); SetFocus(txtChave)
             DisplayMode: =If(CountRows(colBipadas) = 0 || varEnviando, DisplayMode.Disabled, DisplayMode.Edit)
             Fill: =Color.White
             Color: =RGBA(198, 40, 40, 1)
             BorderColor: =RGBA(198, 40, 40, 1)
             BorderThickness: =2
-            Size: =16
+            Size: =14
             FontWeight: =FontWeight.Bold
-            X: =30
-            Y: =980
-            Width: =180
-            Height: =85
+            X: =X0
+            Y: =If(Largo, 394, Parent.Height - 104)
+            Width: =ColE * 0.3
+            Height: =64
       - btnEnviar:
           Control: Classic/Button@2.2.0
           Properties:
@@ -358,12 +356,12 @@ Screens:
             DisplayMode: =If(CountRows(colBipadas) = 0 || varEnviando, DisplayMode.Disabled, DisplayMode.Edit)
             Fill: =CorPrimaria
             Color: =Color.White
-            Size: =20
+            Size: =18
             FontWeight: =FontWeight.Bold
-            X: =225
-            Y: =980
-            Width: =385
-            Height: =85
+            X: =X0 + ColE * 0.33
+            Y: =If(Largo, 394, Parent.Height - 104)
+            Width: =ColE * 0.67
+            Height: =64
             OnSelect: |-
               =If(
                   IsBlank(varItin),
@@ -437,19 +435,16 @@ Screens:
                   Set(varEnviando, false);
                   SetFocus(txtChave)
               )
-
       - lblVersaoBip:
           Control: Label@2.5.1
           Properties:
             Text: |-
               ="Ver: " & VersaoApp
-            Size: =11
-            X: =10
-            Y: =Parent.Height - 40
-            Width: =200
-            Height: =35
-
-      # ------------------------------------------------------------ Sobreposição: escolher itinerário
+            Size: =10
+            X: =8
+            Y: =Parent.Height - 32
+            Width: =150
+            Height: =28
       - rectOverlay:
           Control: Rectangle@2.3.0
           Properties:
@@ -464,22 +459,22 @@ Screens:
           Properties:
             Visible: =varMostrarItins
             Fill: =Color.White
-            X: =20
-            Y: =60
-            Width: =600
-            Height: =1010
+            X: =X0
+            Y: =40
+            Width: =Conteudo
+            Height: =Parent.Height - 60
       - lblOverlayTit:
           Control: Label@2.5.1
           Properties:
             Visible: =varMostrarItins
             Text: =If(CountRows(colMatchItin) > 0, "Mais de uma doca com este código — escolha:", "Escolha o itinerário")
-            Size: =16
+            Size: =14
             FontWeight: =FontWeight.Bold
             Color: =CorEscura
-            X: =40
-            Y: =75
-            Width: =500
-            Height: =55
+            X: =X0 + 16
+            Y: =50
+            Width: =Conteudo - 80
+            Height: =44
       - icoFecharOverlay:
           Control: Classic/Icon@2.5.0
           Properties:
@@ -487,24 +482,24 @@ Screens:
             Icon: =Icon.Cancel
             Color: =CorEscura
             OnSelect: =Set(varMostrarItins, false); Clear(colMatchItin); SetFocus(txtChave)
-            X: =550
-            Y: =75
-            Width: =50
-            Height: =50
+            X: =X0 + Conteudo - 56
+            Y: =48
+            Width: =44
+            Height: =44
       - galItins:
           Control: Gallery@2.15.0
           Variant: Vertical
           Properties:
             Visible: =varMostrarItins
             Items: =If(CountRows(colMatchItin) > 0, colMatchItin, colItinerarios)
-            WrapCount: =3
-            TemplateSize: =140
+            WrapCount: =Max(2, RoundDown((Conteudo - 20) / 180, 0))
+            TemplateSize: =120
             TemplatePadding: =0
             OnSelect: =Set(varItin, ThisItem); Set(varMostrarItins, false); Clear(colMatchItin); SetFocus(txtChave)
-            X: =30
-            Y: =140
-            Width: =580
-            Height: =920
+            X: =X0 + 10
+            Y: =100
+            Width: =Conteudo - 20
+            Height: =Parent.Height - 130
           Children:
             - rectTile:
                 Control: Rectangle@2.3.0
@@ -518,28 +513,30 @@ Screens:
             - lblTileDoca:
                 Control: Label@2.5.1
                 Properties:
-                  Text: ="DOCA " & ThisItem.Doca
+                  Text: |-
+                    ="DOCA " & ThisItem.Doca
                   Color: =If(!IsBlank(varItin) && varItin.Ordem = ThisItem.Ordem, Color.White, CorEscura)
                   FontWeight: =FontWeight.Bold
-                  Size: =15
+                  Size: =14
                   Align: =Align.Center
                   OnSelect: =Select(Parent)
                   X: =5
-                  Y: =10
+                  Y: =8
                   Width: =Parent.TemplateWidth - 10
-                  Height: =35
+                  Height: =32
             - lblTileItin:
                 Control: Label@2.5.1
                 Properties:
-                  Text: ="It. " & ThisItem.Itinerario
+                  Text: |-
+                    ="It. " & ThisItem.Itinerario
                   Color: =If(!IsBlank(varItin) && varItin.Ordem = ThisItem.Ordem, Color.White, CorPrimaria)
-                  Size: =12
+                  Size: =11
                   Align: =Align.Center
                   OnSelect: =Select(Parent)
                   X: =5
-                  Y: =42
+                  Y: =38
                   Width: =Parent.TemplateWidth - 10
-                  Height: =28
+                  Height: =26
             - lblTileBairro:
                 Control: Label@2.5.1
                 Properties:
@@ -550,6 +547,6 @@ Screens:
                   VerticalAlign: =VerticalAlign.Top
                   OnSelect: =Select(Parent)
                   X: =8
-                  Y: =70
+                  Y: =64
                   Width: =Parent.TemplateWidth - 16
-                  Height: =60
+                  Height: =50

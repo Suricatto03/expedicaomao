@@ -59,11 +59,13 @@ Em cada lista: ⚙️ (canto superior direito) **> Configurações da lista > Co
 2. **Dados > Adicionar dados >** digite **SharePoint** **>** escolha o site `faturamentoexpmanaus` e marque
    as 4 listas.
 3. **Configurações > Geral > Limite de linhas de dados**: `2000`.
+   **Configurações > Exibição**: **desligue "Dimensionar para ajustar"** (e com isso "Bloquear taxa de proporção").
+   É isso que deixa o app responsivo: no PC as telas usam 2 colunas, no celular 1 coluna.
 4. **App** (topo da árvore de controles):
    - propriedade **Formulas**: cole o bloco `Formulas` de `powerapps/App.pa.yaml`, sem o `=` inicial se o
      editor reclamar;
    - propriedade **OnStart**: cole o bloco `OnStart`;
-   - em `Administradores`, troque pelo(s) seu(s) e-mail(s), em minúsculas. Só esses usuários veem a lixeira
+   - em `Administradores` já está `joserita@bemol.com.br`; acrescente outros e-mails, em minúsculas, se precisar. Só esses usuários veem a lixeira
      de estorno.
 5. Crie 6 telas com estes nomes exatos: `scrInicio`, `scrBipagem`, `scrPainel`, `scrDetalhe`, `scrFechamento`, `scrConsulta`.
    Deixe `scrInicio` como a primeira.

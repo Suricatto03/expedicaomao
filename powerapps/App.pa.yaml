@@ -2,6 +2,9 @@
 # Copie cada fórmula para a propriedade correspondente no Power Apps Studio.
 App:
   Properties:
+    # responsivo: telas se ajustam a qualquer largura a partir de 320 px
+    MinScreenWidth: =320
+    MinScreenHeight: =560
     # App > Formulas  (fórmulas nomeadas — recalculam sozinhas)
     Formulas: |-
       =VersaoApp = "2.0";
@@ -10,6 +13,17 @@ App:
       CorFundo = RGBA(237, 237, 237, 1);
       CorClara = RGBA(225, 238, 252, 1);
       NotasPorFrota = 40;
+      // ---- layout responsivo: PC (>= 900 px) em 2 colunas, celular em 1 coluna
+      Largo = App.Width >= 900;
+      Conteudo = Min(App.Width - 24, 1280);
+      X0 = (App.Width - Conteudo) / 2;
+      ColE = If(Largo, Conteudo * 0.42, Conteudo);
+      ColDX = X0 + ColE + 24;
+      ColDW = Conteudo - ColE - 24;
+      KpiW = If(Largo, (Conteudo - 70) / 8, (Conteudo - 30) / 4);
+      ColDoca = If(Largo, 70, 40);
+      ColIt = If(Largo, 70, 46);
+      ColNum = If(Largo, 90, 40);
       Categorias = Table(
           {Cod: "FATURADA",    Nome: "Faturada",    Curto: "F",  Cor: RGBA(46, 125, 50, 1)},
           {Cod: "INSUCESSO",   Nome: "Insucesso",   Curto: "I",  Cor: RGBA(198, 40, 40, 1)},
@@ -17,7 +31,7 @@ App:
           {Cod: "MARKETPLACE", Nome: "Marketplace", Curto: "MP", Cor: RGBA(123, 31, 162, 1)}
       );
       // e-mails (minúsculos) que podem estornar NFs no Detalhe
-      Administradores = ["seu.email@bemol.com.br"];
+      Administradores = ["joserita@bemol.com.br"];
       EhAdmin = Lower(User().Email) in Administradores;
 
     OnStart: |-
