@@ -33,9 +33,10 @@ let
     Data       = Date.From(Excel.CurrentWorkbook(){[Name = "pData"]}[Content]{0}[Column1]),
     Itins      = Table.SelectColumns(
                    SharePoint.Tables(pSite, [ApiVersion = 15]){[Title = "Itinerários"]}[Items],
-                   {"Ordem", "Doca", "Bairros", "Itinerario", "CodigoItinerario", "Matricula"}),
+                   {"Title", "Doca", "Bairros", "Itinerario", "CodigoItinerario", "Matricula"}),
+    ItinsN     = Table.TransformColumnTypes(Table.RenameColumns(Itins, {{"Title", "Ordem"}}), {{"Ordem", Int64.Type}}),
     DoDia      = Table.SelectRows(ContagemDiaria, each [DataRef] = Data),
-    Junta      = Table.NestedJoin(Itins, {"Ordem"}, DoDia, {"Ordem"}, "C", JoinKind.LeftOuter),
+    Junta      = Table.NestedJoin(ItinsN, {"Ordem"}, DoDia, {"Ordem"}, "C", JoinKind.LeftOuter),
     Expande    = Table.ExpandTableColumn(Junta, "C", {"Faturadas", "Insucessos", "Resgates", "MP", "Total"}),
     Zeros      = Table.ReplaceValue(Expande, null, 0, Replacer.ReplaceValue,
                    {"Faturadas", "Insucessos", "Resgates", "MP", "Total"}),
