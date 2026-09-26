@@ -131,7 +131,7 @@ Screens:
                     Remove(colDetalhe, ThisItem);
                     With(
                         {
-                            reg: LookUp(ContagemDiaria, Chave = varDetDataRef & "|" & Text(varLinhaDet.Ordem)),
+                            reg: LookUp(ContagemDiaria, Title = varDetDataRef & "|" & Text(varLinhaDet.Ordem)),
                             f: CountRows(Filter(colDetalhe, Categoria = "FATURADA")),
                             i: CountRows(Filter(colDetalhe, Categoria = "INSUCESSO")),
                             r: CountRows(Filter(colDetalhe, Categoria = "RESGATE")),
@@ -142,7 +142,6 @@ Screens:
                             If(IsBlank(reg), Defaults(ContagemDiaria), reg),
                             {
                                 Title: varDetDataRef & "|" & Text(varLinhaDet.Ordem),
-                                Chave: varDetDataRef & "|" & Text(varLinhaDet.Ordem),
                                 DataRef: varDetDataRef,
                                 MesRef: Left(varDetDataRef, 7),
                                 Data: DateValue(varDetDataRef),
