@@ -1,0 +1,13 @@
+Set(varCategoria; First(Categorias));;
+Set(varItin; Blank());;
+Set(varMostrarItins; false);;
+Set(varBuscaTexto; "");;
+Set(varEnviando; false);;
+ClearCollect(
+    colItinerarios;
+    // na lista, a "Ordem" ficou guardada na coluna Title (texto) -> vira número aqui
+    Sort(AddColumns(Filter('Itinerários'; Ativo = 1); Ordem; Value(Title)); Ordem; SortOrder.Ascending)
+);;
+ClearCollect(colMatchItin; FirstN(colItinerarios; 0));;
+ClearCollect(colBipadas; {Chave: ""; Numero: ""; Serie: ""; CNPJ: ""; Categoria: ""; Hora: Now()});;
+Clear(colBipadas)
