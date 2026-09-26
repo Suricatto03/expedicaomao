@@ -32,7 +32,7 @@ in
 let
     Data       = Date.From(Excel.CurrentWorkbook(){[Name = "pData"]}[Content]{0}[Column1]),
     Itins      = Table.SelectColumns(
-                   SharePoint.Tables(pSite, [ApiVersion = 15]){[Title = "Itinerarios"]}[Items],
+                   SharePoint.Tables(pSite, [ApiVersion = 15]){[Title = "Itinerários"]}[Items],
                    {"Ordem", "Doca", "Bairros", "Itinerario", "CodigoItinerario", "Matricula"}),
     DoDia      = Table.SelectRows(ContagemDiaria, each [DataRef] = Data),
     Junta      = Table.NestedJoin(Itins, {"Ordem"}, DoDia, {"Ordem"}, "C", JoinKind.LeftOuter),

@@ -26,7 +26,7 @@ site. Se aparecer "sem permissão" em algum passo, peça isso ao dono do site.
 
    | Lista | Colunas que devem ser **Número** | Coluna **Data** | Coluna **Sim/Não** | Todas as outras |
    |---|---|---|---|---|
-   | Itinerarios | Ordem | — | Ativo | Linha única de texto |
+   | Itinerários | Ordem, Ativo (1 = ativo, 0 = inativo) | — | — | Linha única de texto |
    | Bipagens | Ordem | — | — | Linha única de texto |
    | ContagemDiaria | Ordem, Faturadas, Insucessos, Resgates, MP, Total | Data | — | Linha única de texto |
    | ResumoDiario | Disponiveis, PresasJ1BNFE, FrotasDisponiveis, FrotasManutencao | Data | — | Linha única de texto |
