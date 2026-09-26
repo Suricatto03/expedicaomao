@@ -209,13 +209,13 @@ Screens:
                                   {ja: LookUp(Bipagens, ChaveAcesso = c && DataRef = Text(Today(), "yyyy-mm-dd"))},
                                   If(
                                       !IsBlank(ja),
-                                      Notify("NF " & Value(Mid(c, 26, 9)) & " já registrada hoje na doca " & ja.Doca & " (" & ja.Categoria & ").", NotificationType.Error),
+                                      Notify("NF " & Mid(c, 26, 9) & " / " & Mid(c, 23, 3) & " já registrada hoje na doca " & ja.Doca & " (" & ja.Categoria & ").", NotificationType.Error),
                                       Collect(
                                           colBipadas,
                                           {
                                               Chave: c,
-                                              Numero: Text(Value(Mid(c, 26, 9))),
-                                              Serie: Text(Value(Mid(c, 23, 3))),
+                                              Numero: Mid(c, 26, 9),
+                                              Serie: Mid(c, 23, 3),
                                               CNPJ: Mid(c, 7, 14),
                                               Categoria: varCategoria.Cod,
                                               Hora: Now()
@@ -381,6 +381,8 @@ Screens:
                                   {
                                       Title: b.Chave,
                                       ChaveAcesso: b.Chave,
+                                      NumeroNF: b.Numero,
+                                      Serie: b.Serie,
                                       Categoria: b.Categoria,
                                       DataRef: dataRef,
                                       MesRef: Left(dataRef, 7),

@@ -24,6 +24,7 @@ App:
       =Set(varCategoria, First(Categorias));
       Set(varItin, Blank());
       Set(varMostrarItins, false);
+      Set(varBuscaTexto, "");
       Set(varEnviando, false);
       ClearCollect(
           colItinerarios,

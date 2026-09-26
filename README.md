@@ -27,7 +27,7 @@ App em **Power Apps + SharePoint** que junta num lugar só o que hoje está espa
 | `sharepoint/criar-listas.ps1` | (opcional, para o TI) cria tudo por script |
 | `sharepoint/itinerarios.csv` | 41 linhas de doca/itinerário/código/matrícula tiradas da planilha |
 | `powerapps/App.pa.yaml` | Fórmulas globais (cores, categorias, admins) e OnStart |
-| `powerapps/scr*.pa.yaml` | As 5 telas, prontas para *Colar código* no Power Apps Studio |
+| `powerapps/scr*.pa.yaml` | As 6 telas, prontas para *Colar código* no Power Apps Studio |
 | `powerquery/consultas.pq` | Consultas para o Excel ler as listas |
 
 ## Regras de negócio

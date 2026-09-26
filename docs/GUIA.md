@@ -44,7 +44,7 @@ Em cada lista: ⚙️ (canto superior direito) **> Configurações da lista > Co
 
 | Lista | Criar índice em |
 |---|---|
-| Bipagens | ChaveAcesso, DataRef, Ordem |
+| Bipagens | ChaveAcesso, DataRef, Ordem, NumeroNF |
 | ContagemDiaria | Chave, DataRef |
 | ResumoDiario | DataRef |
 
@@ -63,7 +63,7 @@ Em cada lista: ⚙️ (canto superior direito) **> Configurações da lista > Co
    - propriedade **OnStart**: cole o bloco `OnStart`;
    - em `Administradores`, troque pelo(s) seu(s) e-mail(s), em minúsculas. Só esses usuários veem a lixeira
      de estorno.
-5. Crie 5 telas com estes nomes exatos: `scrInicio`, `scrBipagem`, `scrPainel`, `scrDetalhe`, `scrFechamento`.
+5. Crie 6 telas com estes nomes exatos: `scrInicio`, `scrBipagem`, `scrPainel`, `scrDetalhe`, `scrFechamento`, `scrConsulta`.
    Deixe `scrInicio` como a primeira.
 6. Para cada tela, abra o arquivo `powerapps/<tela>.pa.yaml`:
    - copie os itens da seção `Children:` (tudo abaixo dela, **desde o primeiro `- `**);
@@ -97,6 +97,11 @@ Em cada lista: ⚙️ (canto superior direito) **> Configurações da lista > Co
 
 A bipadora precisa estar em modo *teclado* (keyboard wedge) com sufixo **ENTER**, que é o padrão da maioria.
 É o ENTER que dispara a leitura.
+
+### Consultar NF
+
+- Digite o **número da NF** (com ou sem os zeros) e, se quiser, a **série**. Também dá para bipar a chave.
+- Mostra todas as vezes que a NF foi bipada: data e hora, doca, itinerário, matrícula, status e quem bipou.
 
 ### Painel do Dia
 

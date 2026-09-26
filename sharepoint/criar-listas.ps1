@@ -68,6 +68,8 @@ Add-Coluna "Bipagens" "Itinerario" Text
 Add-Coluna "Bipagens" "Matricula"  Text
 Add-Coluna "Bipagens" "Usuario"    Text
 Add-Coluna "Bipagens" "Lote"       Text
+Add-Coluna "Bipagens" "NumeroNF"   Text    -Indexar   # 9 dígitos, com zeros (ex.: 010569344)
+Add-Coluna "Bipagens" "Serie"      Text               # 3 dígitos (ex.: 104)
 
 # ---------------------------------------------------------------- ContagemDiaria (= aba FATURAMENTO do dia)
 New-Lista "ContagemDiaria" "Chave"          # DataRef|Ordem

@@ -45,9 +45,9 @@ Screens:
             Size: =22
             FontWeight: =FontWeight.Bold
             X: =60
-            Y: =300
+            Y: =270
             Width: =520
-            Height: =140
+            Height: =120
       - btnIrPainel:
           Control: Classic/Button@2.2.0
           Properties:
@@ -58,9 +58,9 @@ Screens:
             Size: =22
             FontWeight: =FontWeight.Bold
             X: =60
-            Y: =470
+            Y: =410
             Width: =520
-            Height: =140
+            Height: =120
       - btnIrFechamento:
           Control: Classic/Button@2.2.0
           Properties:
@@ -73,9 +73,24 @@ Screens:
             Size: =22
             FontWeight: =FontWeight.Bold
             X: =60
-            Y: =640
+            Y: =550
             Width: =520
-            Height: =140
+            Height: =120
+      - btnIrConsulta:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Text: ="CONSULTAR NF"
+            OnSelect: =Navigate(scrConsulta, ScreenTransition.None)
+            Fill: =Color.White
+            Color: =CorPrimaria
+            BorderColor: =CorPrimaria
+            BorderThickness: =2
+            Size: =22
+            FontWeight: =FontWeight.Bold
+            X: =60
+            Y: =690
+            Width: =520
+            Height: =120
       - lblVersaoIni:
           Control: Label@2.5.1
           Properties:

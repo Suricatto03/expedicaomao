@@ -88,7 +88,7 @@ Screens:
                 Control: Label@2.5.1
                 Properties:
                   Text: |-
-                    ="NF " & Value(Mid(ThisItem.ChaveAcesso, 26, 9)) & "  •  " & LookUp(Categorias, Cod = ThisItem.Categoria).Nome
+                    ="NF " & ThisItem.NumeroNF & " / " & ThisItem.Serie & "  •  " & LookUp(Categorias, Cod = ThisItem.Categoria).Nome
                   FontWeight: =FontWeight.Bold
                   Size: =13
                   X: =18
