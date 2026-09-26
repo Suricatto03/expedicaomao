@@ -1,0 +1,178 @@
+- rectHeaderCons:
+    Control: Rectangle@2.3.0
+    Properties:
+      Fill: =CorPrimaria
+      X: =0
+      Y: =0
+      Width: =Parent.Width
+      Height: =70
+- icoVoltarCons:
+    Control: Classic/Icon@2.5.0
+    Properties:
+      Icon: =Icon.ChevronLeft
+      Color: =Color.White
+      OnSelect: =Navigate(scrInicio, ScreenTransition.None)
+      X: =6
+      Y: =10
+      Width: =50
+      Height: =50
+- lblTituloCons:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Consultar NF"
+      Color: =Color.White
+      Size: =18
+      FontWeight: =FontWeight.Bold
+      X: =60
+      Y: =10
+      Width: =Parent.Width - 70
+      Height: =50
+- lblBuscaTit:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Número da NF (com ou sem zeros) e série — ou bipe a chave:"
+      Size: =12
+      X: =X0
+      Y: =74
+      Width: =Conteudo
+      Height: =30
+- txtBuscaNF:
+    Control: Classic/TextInput@2.3.2
+    Properties:
+      Default: |-
+        =""
+      HintText: |-
+        ="Nº da NF  ex.: 10569344"
+      Size: =15
+      BorderColor: =CorEscura
+      BorderThickness: =2
+      OnChange: =Select(btnBuscar)
+      X: =X0
+      Y: =104
+      Width: =Conteudo - 130
+      Height: =52
+- txtBuscaSerie:
+    Control: Classic/TextInput@2.3.2
+    Properties:
+      Default: |-
+        =""
+      HintText: |-
+        ="Série"
+      Size: =15
+      BorderColor: =CorEscura
+      BorderThickness: =2
+      X: =X0 + Conteudo - 120
+      Y: =104
+      Width: =120
+      Height: =52
+- btnBuscar:
+    Control: Classic/Button@2.2.0
+    Properties:
+      Text: |-
+        ="BUSCAR"
+      Fill: =CorPrimaria
+      Color: =Color.White
+      Size: =16
+      FontWeight: =FontWeight.Bold
+      X: =X0
+      Y: =164
+      Width: =Conteudo
+      Height: =52
+      OnSelect: |-
+        =With(
+            {t: Substitute(Trim(txtBuscaNF.Text), " ", ""), ts: Trim(txtBuscaSerie.Text)},
+            With(
+                {
+                    n: If(Len(t) = 44, Mid(t, 26, 9), Right("000000000" & t, 9)),
+                    s: If(Len(t) = 44, Mid(t, 23, 3), If(IsBlank(ts), "", Right("000" & ts, 3)))
+                },
+                If(
+                    IsBlank(t),
+                    Notify("Digite o número da NF.", NotificationType.Warning),
+                    With(
+                        {r: Filter(Bipagens, NumeroNF = n)},
+                        ClearCollect(
+                            colConsulta,
+                            Sort(If(IsBlank(s), r, Filter(r, Serie = s)), Created, SortOrder.Descending)
+                        )
+                    );
+                    Set(varBuscaTexto, "NF " & n & If(IsBlank(s), "", " / série " & s))
+                )
+            )
+        )
+- lblResultadoCons:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        =If(
+            IsBlank(varBuscaTexto), "",
+            CountRows(colConsulta) = 0, varBuscaTexto & ": nenhuma bipagem encontrada.",
+            varBuscaTexto & ": " & CountRows(colConsulta) & " registro(s)"
+        )
+      FontWeight: =FontWeight.Bold
+      Size: =13
+      X: =X0
+      Y: =222
+      Width: =Conteudo
+      Height: =32
+- galConsulta:
+    Control: Gallery@2.15.0
+    Variant: Vertical
+    Properties:
+      Items: =colConsulta
+      TemplateSize: =90
+      TemplatePadding: =0
+      Fill: =Color.White
+      X: =X0
+      Y: =258
+      Width: =Conteudo
+      Height: =Parent.Height - 266
+    Children:
+      - rectConsCor:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =LookUp(Categorias, Cod = ThisItem.Categoria).Cor
+            X: =0
+            Y: =8
+            Width: =8
+            Height: =84
+      - lblConsNF:
+          Control: Label@2.5.1
+          Properties:
+            Text: |-
+              ="NF " & ThisItem.NumeroNF & " / " & ThisItem.Serie & "  •  " & LookUp(Categorias, Cod = ThisItem.Categoria).Nome
+            FontWeight: =FontWeight.Bold
+            Size: =13
+            X: =18
+            Y: =4
+            Width: =Parent.TemplateWidth - 24
+            Height: =32
+      - lblConsOnde:
+          Control: Label@2.5.1
+          Properties:
+            Text: =Text(ThisItem.Created, "dd/mm/yyyy hh:mm") & "  •  Doca " & ThisItem.Doca & "  •  It. " & ThisItem.Itinerario & "  •  Mat. " & ThisItem.Matricula
+            Size: =11
+            X: =18
+            Y: =36
+            Width: =Parent.TemplateWidth - 24
+            Height: =30
+      - lblConsQuem:
+          Control: Label@2.5.1
+          Properties:
+            Text: =ThisItem.Usuario
+            Size: =9
+            Color: =RGBA(110, 110, 110, 1)
+            X: =18
+            Y: =66
+            Width: =Parent.TemplateWidth - 24
+            Height: =28
+      - sepCons:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(220, 220, 220, 1)
+            X: =0
+            Y: =Parent.TemplateHeight - 1
+            Width: =Parent.TemplateWidth
+            Height: =1

@@ -1,0 +1,539 @@
+- rectHeaderPai:
+    Control: Rectangle@2.3.0
+    Properties:
+      Fill: =CorPrimaria
+      X: =0
+      Y: =0
+      Width: =Parent.Width
+      Height: =70
+- icoVoltarPai:
+    Control: Classic/Icon@2.5.0
+    Properties:
+      Icon: =Icon.ChevronLeft
+      Color: =Color.White
+      OnSelect: =Navigate(scrInicio, ScreenTransition.None)
+      X: =6
+      Y: =10
+      Width: =50
+      Height: =50
+- lblTituloPai:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Painel do Dia"
+      Color: =Color.White
+      Size: =18
+      FontWeight: =FontWeight.Bold
+      X: =60
+      Y: =4
+      Width: =Parent.Width - 70
+      Height: =36
+- lblAtualizadoPai:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Atualizado às " & Text(varAtualizadoEm, "hh:mm:ss")
+      Color: =Color.White
+      Size: =11
+      X: =60
+      Y: =38
+      Width: =Parent.Width - 70
+      Height: =28
+- dpData:
+    Control: Classic/DatePicker@2.6.0
+    Properties:
+      DefaultDate: =Today()
+      Format: |-
+        ="dd/mm/yyyy"
+      OnChange: =Select(btnAtualizar)
+      Size: =13
+      X: =X0
+      Y: =78
+      Width: =If(Largo, 300, Conteudo * 0.55)
+      Height: =48
+- btnAtualizar:
+    Control: Classic/Button@2.2.0
+    Properties:
+      Text: |-
+        ="ATUALIZAR"
+      Fill: =CorEscura
+      Color: =Color.White
+      Size: =13
+      FontWeight: =FontWeight.Bold
+      X: =X0 + Conteudo - If(Largo, 200, Conteudo * 0.42)
+      Y: =78
+      Width: =If(Largo, 200, Conteudo * 0.42)
+      Height: =48
+      OnSelect: |-
+        =With(
+            {d: Text(dpData.SelectedDate, "yyyy-mm-dd")},
+            ClearCollect(colContDia, Filter(ContagemDiaria, DataRef = d));
+            Set(varResumo, LookUp(ResumoDiario, Title = d))
+        );
+        Set(varAtualizadoEm, Now())
+- tmrAtualizar:
+    Control: Timer@2.1.0
+    Properties:
+      Duration: =60000
+      Repeat: =true
+      AutoStart: =true
+      Visible: =false
+      OnTimerEnd: =Select(btnAtualizar)
+      X: =0
+      Y: =0
+      Width: =10
+      Height: =10
+- lblKpiF:
+    Control: Label@2.5.1
+    Properties:
+      Text: =Text(Sum(colContDia, Faturadas), "#,##0", "pt-BR")
+      Fill: =Color.White
+      Color: =LookUp(Categorias, Cod = "FATURADA").Cor
+      Size: =22
+      FontWeight: =FontWeight.Bold
+      Align: =Align.Center
+      X: =X0 + If(Largo, 0, 0) * (KpiW + 10)
+      Y: =134 + If(Largo, 0, 0 * 84)
+      Width: =KpiW
+      Height: =50
+- lblKpiFCap:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Faturadas"
+      Fill: =Color.White
+      Size: =10
+      Align: =Align.Center
+      X: =X0 + If(Largo, 0, 0) * (KpiW + 10)
+      Y: =134 + If(Largo, 0, 0 * 84) + 50
+      Width: =KpiW
+      Height: =26
+- lblKpiI:
+    Control: Label@2.5.1
+    Properties:
+      Text: =Text(Sum(colContDia, Insucessos), "#,##0", "pt-BR")
+      Fill: =Color.White
+      Color: =LookUp(Categorias, Cod = "INSUCESSO").Cor
+      Size: =22
+      FontWeight: =FontWeight.Bold
+      Align: =Align.Center
+      X: =X0 + If(Largo, 1, 1) * (KpiW + 10)
+      Y: =134 + If(Largo, 0, 0 * 84)
+      Width: =KpiW
+      Height: =50
+- lblKpiICap:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Insucessos"
+      Fill: =Color.White
+      Size: =10
+      Align: =Align.Center
+      X: =X0 + If(Largo, 1, 1) * (KpiW + 10)
+      Y: =134 + If(Largo, 0, 0 * 84) + 50
+      Width: =KpiW
+      Height: =26
+- lblKpiR:
+    Control: Label@2.5.1
+    Properties:
+      Text: =Text(Sum(colContDia, Resgates), "#,##0", "pt-BR")
+      Fill: =Color.White
+      Color: =LookUp(Categorias, Cod = "RESGATE").Cor
+      Size: =22
+      FontWeight: =FontWeight.Bold
+      Align: =Align.Center
+      X: =X0 + If(Largo, 2, 2) * (KpiW + 10)
+      Y: =134 + If(Largo, 0, 0 * 84)
+      Width: =KpiW
+      Height: =50
+- lblKpiRCap:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Resgates"
+      Fill: =Color.White
+      Size: =10
+      Align: =Align.Center
+      X: =X0 + If(Largo, 2, 2) * (KpiW + 10)
+      Y: =134 + If(Largo, 0, 0 * 84) + 50
+      Width: =KpiW
+      Height: =26
+- lblKpiM:
+    Control: Label@2.5.1
+    Properties:
+      Text: =Text(Sum(colContDia, MP), "#,##0", "pt-BR")
+      Fill: =Color.White
+      Color: =LookUp(Categorias, Cod = "MARKETPLACE").Cor
+      Size: =22
+      FontWeight: =FontWeight.Bold
+      Align: =Align.Center
+      X: =X0 + If(Largo, 3, 3) * (KpiW + 10)
+      Y: =134 + If(Largo, 0, 0 * 84)
+      Width: =KpiW
+      Height: =50
+- lblKpiMCap:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Marketplace"
+      Fill: =Color.White
+      Size: =10
+      Align: =Align.Center
+      X: =X0 + If(Largo, 3, 3) * (KpiW + 10)
+      Y: =134 + If(Largo, 0, 0 * 84) + 50
+      Width: =KpiW
+      Height: =26
+- lblKpiTot:
+    Control: Label@2.5.1
+    Properties:
+      Text: =Text(Sum(colContDia, Total), "#,##0", "pt-BR")
+      Fill: =CorPrimaria
+      Color: =Color.White
+      Size: =22
+      FontWeight: =FontWeight.Bold
+      Align: =Align.Center
+      X: =X0 + If(Largo, 4, 0) * (KpiW + 10)
+      Y: =134 + If(Largo, 0, 1 * 84)
+      Width: =KpiW
+      Height: =50
+- lblKpiTotCap:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Total p/ expedir"
+      Fill: =CorPrimaria
+      Color: =Color.White
+      Size: =10
+      Align: =Align.Center
+      X: =X0 + If(Largo, 4, 0) * (KpiW + 10)
+      Y: =134 + If(Largo, 0, 1 * 84) + 50
+      Width: =KpiW
+      Height: =26
+- lblKpiDisp:
+    Control: Label@2.5.1
+    Properties:
+      Text: =If(IsBlank(varResumo), "—", Text(varResumo.Disponiveis, "#,##0", "pt-BR"))
+      Fill: =Color.White
+      Color: =CorEscura
+      Size: =22
+      FontWeight: =FontWeight.Bold
+      Align: =Align.Center
+      X: =X0 + If(Largo, 5, 1) * (KpiW + 10)
+      Y: =134 + If(Largo, 0, 1 * 84)
+      Width: =KpiW
+      Height: =50
+- lblKpiDispCap:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Disponíveis"
+      Fill: =Color.White
+      Size: =10
+      Align: =Align.Center
+      X: =X0 + If(Largo, 5, 1) * (KpiW + 10)
+      Y: =134 + If(Largo, 0, 1 * 84) + 50
+      Width: =KpiW
+      Height: =26
+- lblKpiPct:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        =If(
+            Coalesce(varResumo.Disponiveis, 0) > 0,
+            Text(Sum(colContDia, Faturadas) / varResumo.Disponiveis, "0%"),
+            "—"
+        )
+      Fill: =Color.White
+      Color: =CorEscura
+      Size: =22
+      FontWeight: =FontWeight.Bold
+      Align: =Align.Center
+      X: =X0 + If(Largo, 6, 2) * (KpiW + 10)
+      Y: =134 + If(Largo, 0, 1 * 84)
+      Width: =KpiW
+      Height: =50
+- lblKpiPctCap:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="% Faturamento"
+      Fill: =Color.White
+      Size: =10
+      Align: =Align.Center
+      X: =X0 + If(Largo, 6, 2) * (KpiW + 10)
+      Y: =134 + If(Largo, 0, 1 * 84) + 50
+      Width: =KpiW
+      Height: =26
+- lblKpiAnt:
+    Control: Label@2.5.1
+    Properties:
+      Text: =Text(Sum(colContDia, Insucessos) + Sum(colContDia, Resgates), "#,##0", "pt-BR")
+      Fill: =Color.White
+      Color: =RGBA(198, 40, 40, 1)
+      Size: =22
+      FontWeight: =FontWeight.Bold
+      Align: =Align.Center
+      X: =X0 + If(Largo, 7, 3) * (KpiW + 10)
+      Y: =134 + If(Largo, 0, 1 * 84)
+      Width: =KpiW
+      Height: =50
+- lblKpiAntCap:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Total antigas"
+      Fill: =Color.White
+      Size: =10
+      Align: =Align.Center
+      X: =X0 + If(Largo, 7, 3) * (KpiW + 10)
+      Y: =134 + If(Largo, 0, 1 * 84) + 50
+      Width: =KpiW
+      Height: =26
+- rectCabecalho:
+    Control: Rectangle@2.3.0
+    Properties:
+      Fill: =CorEscura
+      X: =X0
+      Y: =If(Largo, 222, 306)
+      Width: =Conteudo
+      Height: =32
+- lblCab0:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="DOCA"
+      Color: =Color.White
+      Size: =If(Largo, 11, 9)
+      FontWeight: =FontWeight.Bold
+      Align: =Align.Center
+      X: =X0 + 0
+      Y: =If(Largo, 222, 306)
+      Width: =ColDoca
+      Height: =32
+- lblCab1:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="IT."
+      Color: =Color.White
+      Size: =If(Largo, 11, 9)
+      FontWeight: =FontWeight.Bold
+      Align: =Align.Center
+      X: =X0 + ColDoca
+      Y: =If(Largo, 222, 306)
+      Width: =ColIt
+      Height: =32
+- lblCab2:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="BAIRROS"
+      Color: =Color.White
+      Size: =If(Largo, 11, 9)
+      FontWeight: =FontWeight.Bold
+      Align: =Align.Left
+      X: =X0 + ColDoca + ColIt
+      Y: =If(Largo, 222, 306)
+      Width: =Conteudo - ColDoca - ColIt - 5 * ColNum
+      Height: =32
+- lblCab3:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="F"
+      Color: =Color.White
+      Size: =If(Largo, 11, 9)
+      FontWeight: =FontWeight.Bold
+      Align: =Align.Center
+      X: =X0 + Conteudo - 5 * ColNum
+      Y: =If(Largo, 222, 306)
+      Width: =ColNum
+      Height: =32
+- lblCab4:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="I"
+      Color: =Color.White
+      Size: =If(Largo, 11, 9)
+      FontWeight: =FontWeight.Bold
+      Align: =Align.Center
+      X: =X0 + Conteudo - 4 * ColNum
+      Y: =If(Largo, 222, 306)
+      Width: =ColNum
+      Height: =32
+- lblCab5:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="R"
+      Color: =Color.White
+      Size: =If(Largo, 11, 9)
+      FontWeight: =FontWeight.Bold
+      Align: =Align.Center
+      X: =X0 + Conteudo - 3 * ColNum
+      Y: =If(Largo, 222, 306)
+      Width: =ColNum
+      Height: =32
+- lblCab6:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="MP"
+      Color: =Color.White
+      Size: =If(Largo, 11, 9)
+      FontWeight: =FontWeight.Bold
+      Align: =Align.Center
+      X: =X0 + Conteudo - 2 * ColNum
+      Y: =If(Largo, 222, 306)
+      Width: =ColNum
+      Height: =32
+- lblCab7:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="TOT"
+      Color: =Color.White
+      Size: =If(Largo, 11, 9)
+      FontWeight: =FontWeight.Bold
+      Align: =Align.Center
+      X: =X0 + Conteudo - 1 * ColNum
+      Y: =If(Largo, 222, 306)
+      Width: =ColNum
+      Height: =32
+- galPainel:
+    Control: Gallery@2.15.0
+    Variant: Vertical
+    Properties:
+      Items: |-
+        =ForAll(
+            colItinerarios As it,
+            With(
+                {c: LookUp(colContDia, Ordem = it.Ordem)},
+                {
+                    Ordem: it.Ordem,
+                    Doca: it.Doca,
+                    Itinerario: it.Itinerario,
+                    Bairros: it.Bairros,
+                    Codigo: it.CodigoItinerario,
+                    Matricula: it.Matricula,
+                    F: Coalesce(c.Faturadas, 0),
+                    I: Coalesce(c.Insucessos, 0),
+                    R: Coalesce(c.Resgates, 0),
+                    M: Coalesce(c.MP, 0),
+                    T: Coalesce(c.Total, 0)
+                }
+            )
+        )
+      TemplateSize: =If(Largo, 44, 48)
+      TemplatePadding: =0
+      Fill: =Color.White
+      OnSelect: |-
+        =Set(varLinhaDet, ThisItem);
+        Set(varDetDataRef, Text(dpData.SelectedDate, "yyyy-mm-dd"));
+        Navigate(scrDetalhe, ScreenTransition.None)
+      X: =X0
+      Y: =If(Largo, 254, 338)
+      Width: =Conteudo
+      Height: =Parent.Height - If(Largo, 254, 338) - 8
+    Children:
+      - lblPDoca:
+          Control: Label@2.5.1
+          Properties:
+            Text: =ThisItem.Doca
+            FontWeight: =FontWeight.Bold
+            Size: =If(Largo, 12, 10)
+            Fill: =CorPrimaria
+            Color: =Color.White
+            Align: =Align.Center
+            OnSelect: =Select(Parent)
+            X: =0
+            Y: =2
+            Width: =ColDoca
+            Height: =Parent.TemplateHeight - 4
+      - lblPIt:
+          Control: Label@2.5.1
+          Properties:
+            Text: =ThisItem.Itinerario
+            Size: =If(Largo, 12, 10)
+            Align: =Align.Center
+            OnSelect: =Select(Parent)
+            X: =ColDoca
+            Y: =0
+            Width: =ColIt
+            Height: =Parent.TemplateHeight
+      - lblPBairro:
+          Control: Label@2.5.1
+          Properties:
+            Text: =ThisItem.Bairros
+            Size: =If(Largo, 10, 8)
+            OnSelect: =Select(Parent)
+            X: =ColDoca + ColIt
+            Y: =0
+            Width: =Parent.TemplateWidth - ColDoca - ColIt - 5 * ColNum
+            Height: =Parent.TemplateHeight
+      - lblPF:
+          Control: Label@2.5.1
+          Properties:
+            Text: =ThisItem.F
+            Size: =If(Largo, 12, 10)
+            Align: =Align.Center
+            OnSelect: =Select(Parent)
+            X: =Parent.TemplateWidth - 5 * ColNum
+            Y: =0
+            Width: =ColNum
+            Height: =Parent.TemplateHeight
+      - lblPI:
+          Control: Label@2.5.1
+          Properties:
+            Text: =ThisItem.I
+            Size: =If(Largo, 12, 10)
+            Align: =Align.Center
+            Fill: =RGBA(232, 245, 233, 1)
+            OnSelect: =Select(Parent)
+            X: =Parent.TemplateWidth - 4 * ColNum
+            Y: =0
+            Width: =ColNum
+            Height: =Parent.TemplateHeight
+      - lblPR:
+          Control: Label@2.5.1
+          Properties:
+            Text: =ThisItem.R
+            Size: =If(Largo, 12, 10)
+            Align: =Align.Center
+            OnSelect: =Select(Parent)
+            X: =Parent.TemplateWidth - 3 * ColNum
+            Y: =0
+            Width: =ColNum
+            Height: =Parent.TemplateHeight
+      - lblPM:
+          Control: Label@2.5.1
+          Properties:
+            Text: =ThisItem.M
+            Size: =If(Largo, 12, 10)
+            Align: =Align.Center
+            OnSelect: =Select(Parent)
+            X: =Parent.TemplateWidth - 2 * ColNum
+            Y: =0
+            Width: =ColNum
+            Height: =Parent.TemplateHeight
+      - lblPT:
+          Control: Label@2.5.1
+          Properties:
+            Text: =ThisItem.T
+            Size: =If(Largo, 12, 10)
+            FontWeight: =FontWeight.Bold
+            Align: =Align.Center
+            OnSelect: =Select(Parent)
+            X: =Parent.TemplateWidth - 1 * ColNum
+            Y: =0
+            Width: =ColNum
+            Height: =Parent.TemplateHeight
+      - sepPainel:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(220, 220, 220, 1)
+            X: =0
+            Y: =Parent.TemplateHeight - 1
+            Width: =Parent.TemplateWidth
+            Height: =1

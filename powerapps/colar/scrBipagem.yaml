@@ -1,0 +1,546 @@
+- rectHeaderBip:
+    Control: Rectangle@2.3.0
+    Properties:
+      Fill: =CorPrimaria
+      X: =0
+      Y: =0
+      Width: =Parent.Width
+      Height: =70
+- icoVoltarBip:
+    Control: Classic/Icon@2.5.0
+    Properties:
+      Icon: =Icon.ChevronLeft
+      Color: =Color.White
+      OnSelect: =Navigate(scrInicio, ScreenTransition.None)
+      X: =6
+      Y: =10
+      Width: =50
+      Height: =50
+- lblTituloBip:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Controle de Notas Fiscais"
+      Color: =Color.White
+      Size: =18
+      FontWeight: =FontWeight.Bold
+      X: =60
+      Y: =4
+      Width: =Parent.Width - 70
+      Height: =36
+- lblDataBip:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Operação: " & Text(Today(), "dd/mm/yyyy") & "  •  " & User().FullName
+      Color: =Color.White
+      Size: =11
+      X: =60
+      Y: =38
+      Width: =Parent.Width - 70
+      Height: =28
+- lblStatusTit:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Status da NF (vale para as próximas bipagens):"
+      Size: =12
+      X: =X0
+      Y: =74
+      Width: =ColE
+      Height: =30
+- btnCatF:
+    Control: Classic/Button@2.2.0
+    Properties:
+      Text: |-
+        ="FATURADA"
+      OnSelect: =Set(varCategoria, LookUp(Categorias, Cod = "FATURADA")); SetFocus(txtChave)
+      Fill: =If(varCategoria.Cod = "FATURADA", LookUp(Categorias, Cod = "FATURADA").Cor, Color.White)
+      Color: =If(varCategoria.Cod = "FATURADA", Color.White, LookUp(Categorias, Cod = "FATURADA").Cor)
+      BorderColor: =LookUp(Categorias, Cod = "FATURADA").Cor
+      BorderThickness: =2
+      Size: =If(Largo, 12, 10)
+      FontWeight: =FontWeight.Bold
+      X: =X0 + 0 * (((ColE - 24) / 4) + 8)
+      Y: =106
+      Width: =((ColE - 24) / 4)
+      Height: =48
+- btnCatI:
+    Control: Classic/Button@2.2.0
+    Properties:
+      Text: |-
+        ="INSUCESSO"
+      OnSelect: =Set(varCategoria, LookUp(Categorias, Cod = "INSUCESSO")); SetFocus(txtChave)
+      Fill: =If(varCategoria.Cod = "INSUCESSO", LookUp(Categorias, Cod = "INSUCESSO").Cor, Color.White)
+      Color: =If(varCategoria.Cod = "INSUCESSO", Color.White, LookUp(Categorias, Cod = "INSUCESSO").Cor)
+      BorderColor: =LookUp(Categorias, Cod = "INSUCESSO").Cor
+      BorderThickness: =2
+      Size: =If(Largo, 12, 10)
+      FontWeight: =FontWeight.Bold
+      X: =X0 + 1 * (((ColE - 24) / 4) + 8)
+      Y: =106
+      Width: =((ColE - 24) / 4)
+      Height: =48
+- btnCatR:
+    Control: Classic/Button@2.2.0
+    Properties:
+      Text: |-
+        ="RESGATE"
+      OnSelect: =Set(varCategoria, LookUp(Categorias, Cod = "RESGATE")); SetFocus(txtChave)
+      Fill: =If(varCategoria.Cod = "RESGATE", LookUp(Categorias, Cod = "RESGATE").Cor, Color.White)
+      Color: =If(varCategoria.Cod = "RESGATE", Color.White, LookUp(Categorias, Cod = "RESGATE").Cor)
+      BorderColor: =LookUp(Categorias, Cod = "RESGATE").Cor
+      BorderThickness: =2
+      Size: =If(Largo, 12, 10)
+      FontWeight: =FontWeight.Bold
+      X: =X0 + 2 * (((ColE - 24) / 4) + 8)
+      Y: =106
+      Width: =((ColE - 24) / 4)
+      Height: =48
+- btnCatM:
+    Control: Classic/Button@2.2.0
+    Properties:
+      Text: =If(App.Width >= 520, "MARKETPLACE", "MP")
+      OnSelect: =Set(varCategoria, LookUp(Categorias, Cod = "MARKETPLACE")); SetFocus(txtChave)
+      Fill: =If(varCategoria.Cod = "MARKETPLACE", LookUp(Categorias, Cod = "MARKETPLACE").Cor, Color.White)
+      Color: =If(varCategoria.Cod = "MARKETPLACE", Color.White, LookUp(Categorias, Cod = "MARKETPLACE").Cor)
+      BorderColor: =LookUp(Categorias, Cod = "MARKETPLACE").Cor
+      BorderThickness: =2
+      Size: =If(Largo, 12, 10)
+      FontWeight: =FontWeight.Bold
+      X: =X0 + 3 * (((ColE - 24) / 4) + 8)
+      Y: =106
+      Width: =((ColE - 24) / 4)
+      Height: =48
+- lblItinTit:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Itinerário:"
+      Size: =12
+      X: =X0
+      Y: =160
+      Width: =ColE
+      Height: =28
+- lblItinSel:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        =If(
+            IsBlank(varItin),
+            "Nenhum selecionado — bipe o código do itinerário ou toque em LISTA",
+            "DOCA " & varItin.Doca & "  •  IT. " & varItin.Itinerario & Char(10) & varItin.Bairros
+        )
+      Fill: =If(IsBlank(varItin), RGBA(255, 243, 224, 1), CorClara)
+      Color: =If(IsBlank(varItin), RGBA(191, 54, 12, 1), CorEscura)
+      BorderColor: =If(IsBlank(varItin), RGBA(239, 108, 0, 1), CorPrimaria)
+      BorderThickness: =2
+      FontWeight: =If(IsBlank(varItin), FontWeight.Normal, FontWeight.Bold)
+      Size: =12
+      PaddingLeft: =12
+      X: =X0
+      Y: =188
+      Width: =ColE - 110
+      Height: =64
+- btnListaItin:
+    Control: Classic/Button@2.2.0
+    Properties:
+      Text: |-
+        ="LISTA"
+      OnSelect: =Clear(colMatchItin); Set(varMostrarItins, true)
+      Fill: =CorEscura
+      Color: =Color.White
+      Size: =14
+      FontWeight: =FontWeight.Bold
+      X: =X0 + ColE - 100
+      Y: =188
+      Width: =100
+      Height: =64
+- lblChaveTit:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Bipe a Chave de Acesso (ou o código do itinerário):"
+      Size: =12
+      X: =X0
+      Y: =258
+      Width: =ColE
+      Height: =28
+- txtChave:
+    Control: Classic/TextInput@2.3.2
+    Properties:
+      Default: |-
+        =""
+      HintText: |-
+        ="Chave da Nota Fiscal"
+      Size: =15
+      BorderColor: =CorEscura
+      BorderThickness: =2
+      X: =X0
+      Y: =286
+      Width: =ColE
+      Height: =56
+      OnChange: |-
+        =With(
+            {c: Substitute(Substitute(Trim(Self.Text), " ", ""), Char(9), "")},
+            If(
+                IsBlank(c),
+                false,
+
+                // ---------- É uma chave de NF-e (44 dígitos)?
+                IsMatch(c, "\d{44}"),
+                With(
+                    {
+                        dvOk: With(
+                            {s: Sum(ForAll(Sequence(43) As n, Value(Mid(c, 44 - n.Value, 1)) * (Mod(n.Value - 1, 8) + 2)), Value)},
+                            With({r: Mod(s, 11)}, If(r < 2, 0, 11 - r)) = Value(Right(c, 1))
+                        )
+                    },
+                    If(
+                        !dvOk,
+                        Notify("Chave inválida (dígito verificador não confere). Bipe novamente.", NotificationType.Error),
+                        !IsBlank(LookUp(colBipadas, Chave = c)),
+                        Notify("Esta NF já está na lista.", NotificationType.Warning),
+                        With(
+                            {ja: LookUp(Bipagens, ChaveAcesso = c && DataRef = Text(Today(), "yyyy-mm-dd"))},
+                            If(
+                                !IsBlank(ja),
+                                Notify("NF " & Mid(c, 26, 9) & " / " & Mid(c, 23, 3) & " já registrada hoje na doca " & ja.Doca & " (" & ja.Categoria & ").", NotificationType.Error),
+                                Collect(
+                                    colBipadas,
+                                    {
+                                        Chave: c,
+                                        Numero: Mid(c, 26, 9),
+                                        Serie: Mid(c, 23, 3),
+                                        CNPJ: Mid(c, 7, 14),
+                                        Categoria: varCategoria.Cod,
+                                        Hora: Now()
+                                    }
+                                )
+                            )
+                        )
+                    )
+                ),
+
+                // ---------- Senão, tenta como código de itinerário / matrícula
+                With(
+                    {m: Filter(colItinerarios, CodigoItinerario = c || Matricula = c)},
+                    Switch(
+                        CountRows(m),
+                        0, Notify("Código não reconhecido: " & c, NotificationType.Error),
+                        1, Set(varItin, First(m)); Notify("Itinerário " & First(m).Itinerario & " — Doca " & First(m).Doca, NotificationType.Success),
+                        ClearCollect(colMatchItin, m); Set(varMostrarItins, true)
+                    )
+                )
+            )
+        );
+        Reset(Self);
+        SetFocus(Self)
+- galBipadas:
+    Control: Gallery@2.15.0
+    Variant: Vertical
+    Properties:
+      Items: =Sort(colBipadas, Hora, SortOrder.Descending)
+      TemplateSize: =64
+      TemplatePadding: =0
+      Fill: =Color.White
+      BorderColor: =RGBA(200, 200, 200, 1)
+      BorderThickness: =1
+      X: =If(Largo, ColDX, X0)
+      Y: =If(Largo, 74, 350)
+      Width: =If(Largo, ColDW, Conteudo)
+      Height: =If(Largo, Parent.Height - 114, Parent.Height - 500)
+    Children:
+      - rectCatCor:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =LookUp(Categorias, Cod = ThisItem.Categoria).Cor
+            X: =0
+            Y: =8
+            Width: =6
+            Height: =48
+      - lblNF:
+          Control: Label@2.5.1
+          Properties:
+            Text: |-
+              ="NF " & ThisItem.Numero & "  •  Série " & ThisItem.Serie
+            Size: =13
+            FontWeight: =FontWeight.Bold
+            X: =14
+            Y: =2
+            Width: =Parent.TemplateWidth - 170
+            Height: =32
+      - lblChaveItem:
+          Control: Label@2.5.1
+          Properties:
+            Text: =ThisItem.Chave
+            Size: =9
+            Color: =RGBA(110, 110, 110, 1)
+            X: =14
+            Y: =32
+            Width: =Parent.TemplateWidth - 60
+            Height: =26
+      - lblCatItem:
+          Control: Label@2.5.1
+          Properties:
+            Text: =LookUp(Categorias, Cod = ThisItem.Categoria).Nome
+            Color: =LookUp(Categorias, Cod = ThisItem.Categoria).Cor
+            FontWeight: =FontWeight.Bold
+            Size: =11
+            Align: =Align.Right
+            X: =Parent.TemplateWidth - 160
+            Y: =2
+            Width: =110
+            Height: =32
+      - icoRemover:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            Icon: =Icon.Cancel
+            Color: =RGBA(198, 40, 40, 1)
+            OnSelect: =Remove(colBipadas, ThisItem); SetFocus(txtChave)
+            X: =Parent.TemplateWidth - 46
+            Y: =14
+            Width: =36
+            Height: =36
+      - sepItem:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(230, 230, 230, 1)
+            X: =0
+            Y: =Parent.TemplateHeight - 1
+            Width: =Parent.TemplateWidth
+            Height: =1
+- lblQtd:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="QTD: " & CountRows(colBipadas) &
+        "     F: " & CountRows(Filter(colBipadas, Categoria = "FATURADA")) &
+        "   I: " & CountRows(Filter(colBipadas, Categoria = "INSUCESSO")) &
+        "   R: " & CountRows(Filter(colBipadas, Categoria = "RESGATE")) &
+        "   MP: " & CountRows(Filter(colBipadas, Categoria = "MARKETPLACE"))
+      FontWeight: =FontWeight.Bold
+      Size: =13
+      Align: =Align.Center
+      X: =X0
+      Y: =If(Largo, 350, Parent.Height - 146)
+      Width: =ColE
+      Height: =36
+- btnLimpar:
+    Control: Classic/Button@2.2.0
+    Properties:
+      Text: |-
+        ="LIMPAR"
+      OnSelect: =Clear(colBipadas); SetFocus(txtChave)
+      DisplayMode: =If(CountRows(colBipadas) = 0 || varEnviando, DisplayMode.Disabled, DisplayMode.Edit)
+      Fill: =Color.White
+      Color: =RGBA(198, 40, 40, 1)
+      BorderColor: =RGBA(198, 40, 40, 1)
+      BorderThickness: =2
+      Size: =14
+      FontWeight: =FontWeight.Bold
+      X: =X0
+      Y: =If(Largo, 394, Parent.Height - 104)
+      Width: =ColE * 0.3
+      Height: =64
+- btnEnviar:
+    Control: Classic/Button@2.2.0
+    Properties:
+      Text: =If(varEnviando, "ENVIANDO...", "ENVIAR (" & CountRows(colBipadas) & ")")
+      DisplayMode: =If(CountRows(colBipadas) = 0 || varEnviando, DisplayMode.Disabled, DisplayMode.Edit)
+      Fill: =CorPrimaria
+      Color: =Color.White
+      Size: =18
+      FontWeight: =FontWeight.Bold
+      X: =X0 + ColE * 0.33
+      Y: =If(Largo, 394, Parent.Height - 104)
+      Width: =ColE * 0.67
+      Height: =64
+      OnSelect: |-
+        =If(
+            IsBlank(varItin),
+            Notify("Selecione o itinerário antes de enviar (bipe o código ou toque em LISTA).", NotificationType.Error),
+
+            Set(varEnviando, true);
+            With(
+                {dataRef: Text(Today(), "yyyy-mm-dd"), lote: Text(GUID()), qtd: CountRows(colBipadas)},
+                IfError(
+                    // 1) grava uma linha por NF
+                    Collect(
+                        Bipagens,
+                        ForAll(
+                            colBipadas As b,
+                            {
+                                Title: b.Chave,
+                                ChaveAcesso: b.Chave,
+                                NumeroNF: b.Numero,
+                                Serie: b.Serie,
+                                Categoria: b.Categoria,
+                                DataRef: dataRef,
+                                MesRef: Left(dataRef, 7),
+                                Ordem: varItin.Ordem,
+                                Doca: varItin.Doca,
+                                Itinerario: varItin.Itinerario,
+                                Matricula: varItin.Matricula,
+                                Usuario: User().Email,
+                                Lote: lote
+                            }
+                        )
+                    );
+                    // 2) recalcula a contagem da doca no dia (sempre recontando = nunca desalinha)
+                    ClearCollect(colDocaDia, Filter(Bipagens, DataRef = dataRef && Ordem = varItin.Ordem));
+                    With(
+                        {
+                            reg: LookUp(ContagemDiaria, Title = dataRef & "|" & Text(varItin.Ordem)),
+                            f: CountRows(Filter(colDocaDia, Categoria = "FATURADA")),
+                            i: CountRows(Filter(colDocaDia, Categoria = "INSUCESSO")),
+                            r: CountRows(Filter(colDocaDia, Categoria = "RESGATE")),
+                            m: CountRows(Filter(colDocaDia, Categoria = "MARKETPLACE"))
+                        },
+                        Patch(
+                            ContagemDiaria,
+                            If(IsBlank(reg), Defaults(ContagemDiaria), reg),
+                            {
+                                Title: dataRef & "|" & Text(varItin.Ordem),
+                                DataRef: dataRef,
+                                MesRef: Left(dataRef, 7),
+                                Data: DateValue(dataRef),
+                                Ordem: varItin.Ordem,
+                                Doca: varItin.Doca,
+                                Bairros: varItin.Bairros,
+                                Itinerario: varItin.Itinerario,
+                                Codigo: varItin.CodigoItinerario,
+                                Matricula: varItin.Matricula,
+                                Faturadas: f,
+                                Insucessos: i,
+                                Resgates: r,
+                                MP: m,
+                                Total: f + i + r + m
+                            }
+                        )
+                    );
+                    Notify(qtd & " NF(s) enviadas para a Doca " & varItin.Doca & " (It. " & varItin.Itinerario & ").", NotificationType.Success);
+                    Clear(colBipadas);
+                    Set(varItin, Blank()),
+
+                    Notify("Falha ao enviar: " & FirstError.Message & " — as NFs continuam na lista, tente de novo.", NotificationType.Error)
+                )
+            );
+            Set(varEnviando, false);
+            SetFocus(txtChave)
+        )
+- lblVersaoBip:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Ver: " & VersaoApp
+      Size: =10
+      X: =8
+      Y: =Parent.Height - 32
+      Width: =150
+      Height: =28
+- rectOverlay:
+    Control: Rectangle@2.3.0
+    Properties:
+      Visible: =varMostrarItins
+      Fill: =RGBA(0, 0, 0, 0.6)
+      X: =0
+      Y: =0
+      Width: =Parent.Width
+      Height: =Parent.Height
+- rectPainelItins:
+    Control: Rectangle@2.3.0
+    Properties:
+      Visible: =varMostrarItins
+      Fill: =Color.White
+      X: =X0
+      Y: =40
+      Width: =Conteudo
+      Height: =Parent.Height - 60
+- lblOverlayTit:
+    Control: Label@2.5.1
+    Properties:
+      Visible: =varMostrarItins
+      Text: =If(CountRows(colMatchItin) > 0, "Mais de uma doca com este código — escolha:", "Escolha o itinerário")
+      Size: =14
+      FontWeight: =FontWeight.Bold
+      Color: =CorEscura
+      X: =X0 + 16
+      Y: =50
+      Width: =Conteudo - 80
+      Height: =44
+- icoFecharOverlay:
+    Control: Classic/Icon@2.5.0
+    Properties:
+      Visible: =varMostrarItins
+      Icon: =Icon.Cancel
+      Color: =CorEscura
+      OnSelect: =Set(varMostrarItins, false); Clear(colMatchItin); SetFocus(txtChave)
+      X: =X0 + Conteudo - 56
+      Y: =48
+      Width: =44
+      Height: =44
+- galItins:
+    Control: Gallery@2.15.0
+    Variant: Vertical
+    Properties:
+      Visible: =varMostrarItins
+      Items: =If(CountRows(colMatchItin) > 0, colMatchItin, colItinerarios)
+      WrapCount: =Max(2, RoundDown((Conteudo - 20) / 180, 0))
+      TemplateSize: =120
+      TemplatePadding: =0
+      OnSelect: =Set(varItin, ThisItem); Set(varMostrarItins, false); Clear(colMatchItin); SetFocus(txtChave)
+      X: =X0 + 10
+      Y: =100
+      Width: =Conteudo - 20
+      Height: =Parent.Height - 130
+    Children:
+      - rectTile:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =If(!IsBlank(varItin) && varItin.Ordem = ThisItem.Ordem, CorPrimaria, CorClara)
+            OnSelect: =Select(Parent)
+            X: =5
+            Y: =5
+            Width: =Parent.TemplateWidth - 10
+            Height: =Parent.TemplateHeight - 10
+      - lblTileDoca:
+          Control: Label@2.5.1
+          Properties:
+            Text: |-
+              ="DOCA " & ThisItem.Doca
+            Color: =If(!IsBlank(varItin) && varItin.Ordem = ThisItem.Ordem, Color.White, CorEscura)
+            FontWeight: =FontWeight.Bold
+            Size: =14
+            Align: =Align.Center
+            OnSelect: =Select(Parent)
+            X: =5
+            Y: =8
+            Width: =Parent.TemplateWidth - 10
+            Height: =32
+      - lblTileItin:
+          Control: Label@2.5.1
+          Properties:
+            Text: |-
+              ="It. " & ThisItem.Itinerario
+            Color: =If(!IsBlank(varItin) && varItin.Ordem = ThisItem.Ordem, Color.White, CorPrimaria)
+            Size: =11
+            Align: =Align.Center
+            OnSelect: =Select(Parent)
+            X: =5
+            Y: =38
+            Width: =Parent.TemplateWidth - 10
+            Height: =26
+      - lblTileBairro:
+          Control: Label@2.5.1
+          Properties:
+            Text: =ThisItem.Bairros
+            Color: =If(!IsBlank(varItin) && varItin.Ordem = ThisItem.Ordem, Color.White, RGBA(60, 60, 60, 1))
+            Size: =9
+            Align: =Align.Center
+            VerticalAlign: =VerticalAlign.Top
+            OnSelect: =Select(Parent)
+            X: =8
+            Y: =64
+            Width: =Parent.TemplateWidth - 16
+            Height: =50

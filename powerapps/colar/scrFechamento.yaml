@@ -1,0 +1,231 @@
+- rectHeaderFech:
+    Control: Rectangle@2.3.0
+    Properties:
+      Fill: =CorPrimaria
+      X: =0
+      Y: =0
+      Width: =Parent.Width
+      Height: =70
+- icoVoltarFech:
+    Control: Classic/Icon@2.5.0
+    Properties:
+      Icon: =Icon.ChevronLeft
+      Color: =Color.White
+      OnSelect: =Navigate(scrInicio, ScreenTransition.None)
+      X: =6
+      Y: =10
+      Width: =50
+      Height: =50
+- lblTituloFech:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Fechamento do Dia"
+      Color: =Color.White
+      Size: =18
+      FontWeight: =FontWeight.Bold
+      X: =60
+      Y: =10
+      Width: =Parent.Width - 70
+      Height: =50
+- dpFech:
+    Control: Classic/DatePicker@2.6.0
+    Properties:
+      DefaultDate: =Today()
+      Format: |-
+        ="dd/mm/yyyy"
+      OnChange: =Select(btnCarregarFech)
+      Size: =13
+      X: =X0
+      Y: =78
+      Width: =ColE * 0.55
+      Height: =48
+- btnCarregarFech:
+    Control: Classic/Button@2.2.0
+    Properties:
+      Text: |-
+        ="CARREGAR"
+      Fill: =CorEscura
+      Color: =Color.White
+      Size: =13
+      FontWeight: =FontWeight.Bold
+      X: =X0 + ColE * 0.58
+      Y: =78
+      Width: =ColE * 0.42
+      Height: =48
+      OnSelect: |-
+        =With(
+            {d: Text(dpFech.SelectedDate, "yyyy-mm-dd")},
+            Set(varResumoF, LookUp(ResumoDiario, Title = d));
+            ClearCollect(colContFech, Filter(ContagemDiaria, DataRef = d))
+        );
+        Reset(txtDisp); Reset(txtPresas); Reset(txtFrotasDisp); Reset(txtFrotasManut); Reset(txtObs)
+- lblDisp:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Disponíveis para faturamento"
+      Size: =12
+      X: =X0
+      Y: =136
+      Width: =ColE * 0.6
+      Height: =48
+- txtDisp:
+    Control: Classic/TextInput@2.3.2
+    Properties:
+      Default: =If(IsBlank(varResumoF), "", Text(varResumoF.Disponiveis))
+      Format: =TextFormat.Number
+      Size: =14
+      X: =X0 + ColE * 0.62
+      Y: =136
+      Width: =ColE * 0.38
+      Height: =48
+- lblPresas:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Presas J1BNFE / VF04"
+      Size: =12
+      X: =X0
+      Y: =192
+      Width: =ColE * 0.6
+      Height: =48
+- txtPresas:
+    Control: Classic/TextInput@2.3.2
+    Properties:
+      Default: =If(IsBlank(varResumoF), "", Text(varResumoF.PresasJ1BNFE))
+      Format: =TextFormat.Number
+      Size: =14
+      X: =X0 + ColE * 0.62
+      Y: =192
+      Width: =ColE * 0.38
+      Height: =48
+- lblFrotasDisp:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Frotas disponíveis"
+      Size: =12
+      X: =X0
+      Y: =248
+      Width: =ColE * 0.6
+      Height: =48
+- txtFrotasDisp:
+    Control: Classic/TextInput@2.3.2
+    Properties:
+      Default: =If(IsBlank(varResumoF), "", Text(varResumoF.FrotasDisponiveis))
+      Format: =TextFormat.Number
+      Size: =14
+      X: =X0 + ColE * 0.62
+      Y: =248
+      Width: =ColE * 0.38
+      Height: =48
+- lblFrotasManut:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Frotas em manutenção"
+      Size: =12
+      X: =X0
+      Y: =304
+      Width: =ColE * 0.6
+      Height: =48
+- txtFrotasManut:
+    Control: Classic/TextInput@2.3.2
+    Properties:
+      Default: =If(IsBlank(varResumoF), "", Text(varResumoF.FrotasManutencao))
+      Format: =TextFormat.Number
+      Size: =14
+      X: =X0 + ColE * 0.62
+      Y: =304
+      Width: =ColE * 0.38
+      Height: =48
+- txtObs:
+    Control: Classic/TextInput@2.3.2
+    Properties:
+      Default: =If(IsBlank(varResumoF), "", varResumoF.Observacao)
+      HintText: |-
+        ="Observações do dia"
+      MaxLength: =255
+      Mode: =TextMode.MultiLine
+      Size: =12
+      X: =X0
+      Y: =360
+      Width: =ColE
+      Height: =70
+- btnSalvarFech:
+    Control: Classic/Button@2.2.0
+    Properties:
+      Text: |-
+        ="SALVAR"
+      Fill: =CorPrimaria
+      Color: =Color.White
+      Size: =16
+      FontWeight: =FontWeight.Bold
+      X: =X0
+      Y: =440
+      Width: =ColE
+      Height: =52
+      OnSelect: |-
+        =With(
+            {d: Text(dpFech.SelectedDate, "yyyy-mm-dd")},
+            With(
+                {reg: LookUp(ResumoDiario, Title = d)},
+                IfError(
+                    Set(
+                        varResumoF,
+                        Patch(
+                            ResumoDiario,
+                            If(IsBlank(reg), Defaults(ResumoDiario), reg),
+                            {
+                                Title: d,
+                                Data: dpFech.SelectedDate,
+                                Disponiveis: Value(txtDisp.Text),
+                                PresasJ1BNFE: Value(txtPresas.Text),
+                                FrotasDisponiveis: Value(txtFrotasDisp.Text),
+                                FrotasManutencao: Value(txtFrotasManut.Text),
+                                Observacao: txtObs.Text
+                            }
+                        )
+                    );
+                    Notify("Fechamento salvo.", NotificationType.Success),
+                    Notify("Erro ao salvar: " & FirstError.Message, NotificationType.Error)
+                )
+            )
+        )
+- lblQuadro:
+    Control: Label@2.5.1
+    Properties:
+      Fill: =Color.White
+      BorderColor: =CorPrimaria
+      BorderThickness: =2
+      Size: =12
+      PaddingLeft: =20
+      VerticalAlign: =VerticalAlign.Top
+      PaddingTop: =15
+      X: =If(Largo, ColDX, X0)
+      Y: =If(Largo, 78, 502)
+      Width: =If(Largo, ColDW, Conteudo)
+      Height: =If(Largo, 420, Parent.Height - 510)
+      Text: |-
+        =With(
+            {
+                f: Sum(colContFech, Faturadas),
+                i: Sum(colContFech, Insucessos),
+                r: Sum(colContFech, Resgates),
+                m: Sum(colContFech, MP),
+                disp: Coalesce(Value(txtDisp.Text), 0),
+                frotas: Coalesce(Value(txtFrotasDisp.Text), 0)
+            },
+            "RESUMO " & Text(dpFech.SelectedDate, "dd/mm/yyyy") & Char(10) & Char(10) &
+            "Disponíveis p/ faturamento:  " & disp & Char(10) &
+            "Presas J1BNFE/VF04:  " & Coalesce(Value(txtPresas.Text), 0) & Char(10) &
+            "TOTAL PARA EXPEDIR:  " & (f + i + r + m) & Char(10) &
+            "Total faturadas:  " & f & Char(10) &
+            "Total insucessos:  " & i & Char(10) &
+            "Total resgates:  " & r & Char(10) &
+            "Total marketplace:  " & m & Char(10) &
+            "Total antigas (ins. + resg.):  " & (i + r) & Char(10) &
+            "% faturamento:  " & If(disp > 0, Text(f / disp, "0%"), "—") & Char(10) &
+            "Capacidade prevista:  " & (frotas * NotasPorFrota) & " (" & NotasPorFrota & " notas/frota)"
+        )

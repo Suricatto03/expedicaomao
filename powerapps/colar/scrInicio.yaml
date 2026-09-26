@@ -1,0 +1,103 @@
+- rectHeaderIni:
+    Control: Rectangle@2.3.0
+    Properties:
+      Fill: =CorPrimaria
+      X: =0
+      Y: =0
+      Width: =Parent.Width
+      Height: =170
+- lblTituloIni:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Expedição Baús MAO"
+      Color: =Color.White
+      Size: =24
+      FontWeight: =FontWeight.Bold
+      Align: =Align.Center
+      X: =0
+      Y: =36
+      Width: =Parent.Width
+      Height: =50
+- lblSubIni:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Olá, " & User().FullName & Char(10) & Text(Today(), "dddd, dd/mm/yyyy", "pt-BR")
+      Color: =Color.White
+      Size: =12
+      Align: =Align.Center
+      X: =0
+      Y: =90
+      Width: =Parent.Width
+      Height: =64
+- btnIrBipagem:
+    Control: Classic/Button@2.2.0
+    Properties:
+      Text: |-
+        ="BIPAR NOTAS"
+      OnSelect: =Navigate(scrBipagem, ScreenTransition.None)
+      Fill: =CorPrimaria
+      Color: =Color.White
+      Size: =18
+      FontWeight: =FontWeight.Bold
+      X: =(Parent.Width - Min(Conteudo, 520)) / 2
+      Y: =195
+      Width: =Min(Conteudo, 520)
+      Height: =96
+- btnIrPainel:
+    Control: Classic/Button@2.2.0
+    Properties:
+      Text: |-
+        ="PAINEL DO DIA"
+      OnSelect: =Navigate(scrPainel, ScreenTransition.None)
+      Fill: =CorEscura
+      Color: =Color.White
+      Size: =18
+      FontWeight: =FontWeight.Bold
+      X: =(Parent.Width - Min(Conteudo, 520)) / 2
+      Y: =305
+      Width: =Min(Conteudo, 520)
+      Height: =96
+- btnIrFechamento:
+    Control: Classic/Button@2.2.0
+    Properties:
+      Text: |-
+        ="FECHAMENTO DO DIA"
+      OnSelect: =Navigate(scrFechamento, ScreenTransition.None)
+      Fill: =Color.White
+      Color: =CorEscura
+      BorderColor: =CorEscura
+      BorderThickness: =2
+      Size: =18
+      FontWeight: =FontWeight.Bold
+      X: =(Parent.Width - Min(Conteudo, 520)) / 2
+      Y: =415
+      Width: =Min(Conteudo, 520)
+      Height: =96
+- btnIrConsulta:
+    Control: Classic/Button@2.2.0
+    Properties:
+      Text: |-
+        ="CONSULTAR NF"
+      OnSelect: =Navigate(scrConsulta, ScreenTransition.None)
+      Fill: =Color.White
+      Color: =CorPrimaria
+      BorderColor: =CorPrimaria
+      BorderThickness: =2
+      Size: =18
+      FontWeight: =FontWeight.Bold
+      X: =(Parent.Width - Min(Conteudo, 520)) / 2
+      Y: =525
+      Width: =Min(Conteudo, 520)
+      Height: =96
+- lblVersaoIni:
+    Control: Label@2.5.1
+    Properties:
+      Text: |-
+        ="Ver: " & VersaoApp
+      Size: =10
+      X: =8
+      Y: =Parent.Height - 32
+      Width: =200
+      Height: =28
