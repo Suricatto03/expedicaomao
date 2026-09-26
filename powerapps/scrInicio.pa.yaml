@@ -1,0 +1,88 @@
+Screens:
+  scrInicio:
+    Properties:
+      Fill: =CorFundo
+    Children:
+      - rectHeaderIni:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =CorPrimaria
+            X: =0
+            Y: =0
+            Width: =Parent.Width
+            Height: =220
+      - lblTituloIni:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Expedição Baús MAO"
+            Color: =Color.White
+            Size: =28
+            FontWeight: =FontWeight.Bold
+            Align: =Align.Center
+            X: =0
+            Y: =50
+            Width: =Parent.Width
+            Height: =60
+      - lblSubIni:
+          Control: Label@2.5.1
+          Properties:
+            Text: |-
+              ="Olá, " & User().FullName & Char(10) & Text(Today(), "dddd, dd/mm/yyyy", "pt-BR")
+            Color: =Color.White
+            Size: =14
+            Align: =Align.Center
+            X: =0
+            Y: =115
+            Width: =Parent.Width
+            Height: =80
+      - btnIrBipagem:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Text: ="BIPAR NOTAS"
+            OnSelect: =Navigate(scrBipagem, ScreenTransition.None)
+            Fill: =CorPrimaria
+            Color: =Color.White
+            Size: =22
+            FontWeight: =FontWeight.Bold
+            X: =60
+            Y: =300
+            Width: =520
+            Height: =140
+      - btnIrPainel:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Text: ="PAINEL DO DIA"
+            OnSelect: =Navigate(scrPainel, ScreenTransition.None)
+            Fill: =CorEscura
+            Color: =Color.White
+            Size: =22
+            FontWeight: =FontWeight.Bold
+            X: =60
+            Y: =470
+            Width: =520
+            Height: =140
+      - btnIrFechamento:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Text: ="FECHAMENTO DO DIA"
+            OnSelect: =Navigate(scrFechamento, ScreenTransition.None)
+            Fill: =Color.White
+            Color: =CorEscura
+            BorderColor: =CorEscura
+            BorderThickness: =2
+            Size: =22
+            FontWeight: =FontWeight.Bold
+            X: =60
+            Y: =640
+            Width: =520
+            Height: =140
+      - lblVersaoIni:
+          Control: Label@2.5.1
+          Properties:
+            Text: |-
+              ="Ver: " & VersaoApp
+            Size: =11
+            X: =10
+            Y: =Parent.Height - 40
+            Width: =200
+            Height: =35

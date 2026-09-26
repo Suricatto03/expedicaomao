@@ -1,0 +1,34 @@
+# Propriedades do objeto "App" (árvore de controles > App).
+# Copie cada fórmula para a propriedade correspondente no Power Apps Studio.
+App:
+  Properties:
+    # App > Formulas  (fórmulas nomeadas — recalculam sozinhas)
+    Formulas: |-
+      =VersaoApp = "2.0";
+      CorPrimaria = RGBA(38, 132, 220, 1);
+      CorEscura = RGBA(21, 67, 140, 1);
+      CorFundo = RGBA(237, 237, 237, 1);
+      CorClara = RGBA(225, 238, 252, 1);
+      NotasPorFrota = 40;
+      Categorias = Table(
+          {Cod: "FATURADA",    Nome: "Faturada",    Curto: "F",  Cor: RGBA(46, 125, 50, 1)},
+          {Cod: "INSUCESSO",   Nome: "Insucesso",   Curto: "I",  Cor: RGBA(198, 40, 40, 1)},
+          {Cod: "RESGATE",     Nome: "Resgate",     Curto: "R",  Cor: RGBA(239, 108, 0, 1)},
+          {Cod: "MARKETPLACE", Nome: "Marketplace", Curto: "MP", Cor: RGBA(123, 31, 162, 1)}
+      );
+      // e-mails (minúsculos) que podem estornar NFs no Detalhe
+      Administradores = ["seu.email@bemol.com.br"];
+      EhAdmin = Lower(User().Email) in Administradores;
+
+    OnStart: |-
+      =Set(varCategoria, First(Categorias));
+      Set(varItin, Blank());
+      Set(varMostrarItins, false);
+      Set(varEnviando, false);
+      ClearCollect(
+          colItinerarios,
+          Sort(Filter(Itinerarios, Ativo = true), Ordem, SortOrder.Ascending)
+      );
+      ClearCollect(colMatchItin, FirstN(colItinerarios, 0));
+      ClearCollect(colBipadas, {Chave: "", Numero: "", Serie: "", CNPJ: "", Categoria: "", Hora: Now()});
+      Clear(colBipadas)

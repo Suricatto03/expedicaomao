@@ -1,0 +1,170 @@
+Screens:
+  scrDetalhe:
+    Properties:
+      Fill: =CorFundo
+      OnVisible: |-
+        =ClearCollect(
+            colDetalhe,
+            Sort(Filter(Bipagens, DataRef = varDetDataRef && Ordem = varLinhaDet.Ordem), Created, SortOrder.Descending)
+        )
+    Children:
+      - rectHeaderDet:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =CorPrimaria
+            X: =0
+            Y: =0
+            Width: =Parent.Width
+            Height: =110
+      - icoVoltarDet:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            Icon: =Icon.ChevronLeft
+            Color: =Color.White
+            OnSelect: =Navigate(scrPainel, ScreenTransition.None)
+            X: =15
+            Y: =25
+            Width: =60
+            Height: =60
+      - lblTituloDet:
+          Control: Label@2.5.1
+          Properties:
+            Text: ="Doca " & varLinhaDet.Doca & "  •  It. " & varLinhaDet.Itinerario
+            Color: =Color.White
+            Size: =22
+            FontWeight: =FontWeight.Bold
+            X: =85
+            Y: =12
+            Width: =540
+            Height: =50
+      - lblSubDet:
+          Control: Label@2.5.1
+          Properties:
+            Text: =varLinhaDet.Bairros & "  •  " & Text(DateValue(varDetDataRef), "dd/mm/yyyy")
+            Color: =Color.White
+            Size: =11
+            X: =85
+            Y: =60
+            Width: =540
+            Height: =40
+      - lblResumoDet:
+          Control: Label@2.5.1
+          Properties:
+            Text: |-
+              ="QTD: " & CountRows(colDetalhe) &
+              "     F: " & CountRows(Filter(colDetalhe, Categoria = "FATURADA")) &
+              "   I: " & CountRows(Filter(colDetalhe, Categoria = "INSUCESSO")) &
+              "   R: " & CountRows(Filter(colDetalhe, Categoria = "RESGATE")) &
+              "   MP: " & CountRows(Filter(colDetalhe, Categoria = "MARKETPLACE"))
+            FontWeight: =FontWeight.Bold
+            Size: =14
+            Align: =Align.Center
+            X: =30
+            Y: =125
+            Width: =580
+            Height: =45
+      - galDetalhe:
+          Control: Gallery@2.15.0
+          Variant: Vertical
+          Properties:
+            Items: =colDetalhe
+            TemplateSize: =75
+            TemplatePadding: =0
+            Fill: =Color.White
+            X: =30
+            Y: =180
+            Width: =580
+            Height: =900
+          Children:
+            - rectDetCor:
+                Control: Rectangle@2.3.0
+                Properties:
+                  Fill: =LookUp(Categorias, Cod = ThisItem.Categoria).Cor
+                  X: =0
+                  Y: =8
+                  Width: =8
+                  Height: =58
+            - lblDetNF:
+                Control: Label@2.5.1
+                Properties:
+                  Text: |-
+                    ="NF " & Value(Mid(ThisItem.Title, 26, 9)) & "  •  " & LookUp(Categorias, Cod = ThisItem.Categoria).Nome
+                  FontWeight: =FontWeight.Bold
+                  Size: =13
+                  X: =18
+                  Y: =2
+                  Width: =480
+                  Height: =32
+            - lblDetChave:
+                Control: Label@2.5.1
+                Properties:
+                  Text: =ThisItem.Title
+                  Size: =9
+                  Color: =RGBA(110, 110, 110, 1)
+                  X: =18
+                  Y: =30
+                  Width: =480
+                  Height: =22
+            - lblDetQuem:
+                Control: Label@2.5.1
+                Properties:
+                  Text: =Text(ThisItem.Created, "hh:mm") & "  •  " & ThisItem.Usuario
+                  Size: =9
+                  Color: =RGBA(110, 110, 110, 1)
+                  X: =18
+                  Y: =50
+                  Width: =480
+                  Height: =22
+            - icoEstornar:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  Visible: =EhAdmin
+                  Icon: =Icon.Trash
+                  Color: =RGBA(198, 40, 40, 1)
+                  X: =520
+                  Y: =15
+                  Width: =45
+                  Height: =45
+                  # Remove a NF e recalcula a ContagemDiaria da doca
+                  OnSelect: |-
+                    =Remove(Bipagens, LookUp(Bipagens, ID = ThisItem.ID));
+                    Remove(colDetalhe, ThisItem);
+                    With(
+                        {
+                            reg: LookUp(ContagemDiaria, Title = varDetDataRef & "|" & Text(varLinhaDet.Ordem)),
+                            f: CountRows(Filter(colDetalhe, Categoria = "FATURADA")),
+                            i: CountRows(Filter(colDetalhe, Categoria = "INSUCESSO")),
+                            r: CountRows(Filter(colDetalhe, Categoria = "RESGATE")),
+                            m: CountRows(Filter(colDetalhe, Categoria = "MARKETPLACE"))
+                        },
+                        Patch(
+                            ContagemDiaria,
+                            If(IsBlank(reg), Defaults(ContagemDiaria), reg),
+                            {
+                                Title: varDetDataRef & "|" & Text(varLinhaDet.Ordem),
+                                DataRef: varDetDataRef,
+                                MesRef: Left(varDetDataRef, 7),
+                                Data: DateValue(varDetDataRef),
+                                Ordem: varLinhaDet.Ordem,
+                                Doca: varLinhaDet.Doca,
+                                Bairros: varLinhaDet.Bairros,
+                                Itinerario: varLinhaDet.Itinerario,
+                                Codigo: varLinhaDet.Codigo,
+                                Matricula: varLinhaDet.Matricula,
+                                Faturadas: f,
+                                Insucessos: i,
+                                Resgates: r,
+                                MP: m,
+                                Total: f + i + r + m
+                            }
+                        )
+                    );
+                    Notify("NF estornada.", NotificationType.Success)
+            - sepDet:
+                Control: Rectangle@2.3.0
+                Properties:
+                  Fill: =RGBA(220, 220, 220, 1)
+                  X: =0
+                  Y: =Parent.TemplateHeight - 1
+                  Width: =Parent.TemplateWidth
+                  Height: =1
