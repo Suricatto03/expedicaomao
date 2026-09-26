@@ -147,6 +147,7 @@ Screens:
           Properties:
             Default: =If(IsBlank(varResumoF), "", varResumoF.Observacao)
             HintText: ="Observações do dia"
+            MaxLength: =255
             Mode: =TextMode.MultiLine
             Size: =13
             X: =30
