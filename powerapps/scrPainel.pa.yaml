@@ -72,7 +72,7 @@ Screens:
               =With(
                   {d: Text(dpData.SelectedDate, "yyyy-mm-dd")},
                   ClearCollect(colContDia, Filter(ContagemDiaria, DataRef = d));
-                  Set(varResumo, LookUp(ResumoDiario, Title = d))
+                  Set(varResumo, LookUp(ResumoDiario, DataRef = d))
               );
               Set(varAtualizadoEm, Now())
       - tmrAtualizar:
@@ -406,7 +406,7 @@ Screens:
                       {c: LookUp(colContDia, Ordem = it.Ordem)},
                       {
                           Ordem: it.Ordem,
-                          Doca: it.Title,
+                          Doca: it.Doca,
                           Itinerario: it.Itinerario,
                           Bairros: it.Bairros,
                           Codigo: it.CodigoItinerario,

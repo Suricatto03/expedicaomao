@@ -4,83 +4,58 @@ Tempo estimado: 1h30 a 2h na primeira vez.
 
 ---
 
-## 1. Criar as listas no SharePoint
+## 1. Criar o banco de dados (listas do SharePoint): só cliques
 
-### Opção A: script (recomendada)
+Use o site que a equipe já tem: **https://bemol.sharepoint.com/sites/faturamentoexpmanaus**
+(é onde está a FATURAMENTO BAIA 13.xlsx). Você precisa ter permissão de *Editar* ou ser *Proprietário* desse
+site. Se aparecer "sem permissão" em algum passo, peça isso ao dono do site.
 
-1. Crie (ou escolha) um site do SharePoint, por exemplo `https://suaempresa.sharepoint.com/sites/ExpedicaoMAO`.
-2. No PowerShell 7:
-   ```powershell
-   Install-Module PnP.PowerShell -Scope CurrentUser
-   # só na 1ª vez; se o TI bloquear, peça a eles um ClientId de app PnP
-   Register-PnPEntraIDAppForInteractiveLogin -ApplicationName "PnP Expedicao" -Tenant suaempresa.onmicrosoft.com -Interactive
-   cd sharepoint
-   .\criar-listas.ps1 -SiteUrl "https://suaempresa.sharepoint.com/sites/ExpedicaoMAO" -ClientId "<ClientId gerado acima>"
-   ```
-3. O script cria as 4 listas, os índices e já cadastra os 41 itinerários de `itinerarios.csv`.
+### 1.1 Subir o arquivo modelo
 
-### Opção B: manual
+1. Baixe `modelos/Expedicao_BancoDeDados.xlsx`. Ele já tem 4 abas prontas, e a aba **Itinerarios** vem com as
+   41 docas da sua planilha.
+2. Confira a coluna **CodigoItinerario**: os códigos foram digitados a partir de uma foto.
+3. Arraste o arquivo para **Documentos** do site faturamentoexpmanaus.
 
-Crie as listas abaixo em **Novo > Lista > Lista em branco**. Os nomes das colunas precisam ser **exatamente**
-estes: sem acento e sem espaço, porque o app usa esses nomes.
+### 1.2 Criar as 4 listas (repita 4 vezes, uma por aba)
 
-**Itinerarios** (cadastro, 1 linha por doca/bairro)
+1. No site, clique em **+ Novo > Lista**.
+2. Escolha **Do Excel** e selecione `Expedicao_BancoDeDados.xlsx`.
+3. Em **Selecione uma tabela**, escolha a primeira: `Itinerarios`.
+4. A tela mostra cada coluna com um tipo. Ajuste assim:
 
-| Coluna | Tipo | Obs. |
-|---|---|---|
-| Title | (padrão) | nº da doca, ex.: `04` |
-| Ordem | Número | **único, indexado.** É a chave da linha (a mesma doca aparece em mais de uma linha) |
-| Bairros | Texto | |
-| Itinerario | Texto | `01`, `21/31`… |
-| CodigoItinerario | Texto | código de barras do itinerário (`004#7G9!2k5@`) |
-| Matricula | Texto | responsável |
-| Zona | Texto | opcional (Norte, Leste…) |
-| Ativo | Sim/Não | padrão Sim. Desmarque para esconder do app |
+   | Lista | Colunas que devem ser **Número** | Coluna **Data** | Coluna **Sim/Não** | Todas as outras |
+   |---|---|---|---|---|
+   | Itinerarios | Ordem | — | Ativo | Linha única de texto |
+   | Bipagens | Ordem | — | — | Linha única de texto |
+   | ContagemDiaria | Ordem, Faturadas, Insucessos, Resgates, MP, Total | Data | — | Linha única de texto |
+   | ResumoDiario | Disponiveis, PresasJ1BNFE, FrotasDisponiveis, FrotasManutencao | Data | — | Linha única de texto |
 
-Depois, abra a lista em **Editar em modo de grade** e cole o conteúdo de `sharepoint/itinerarios.csv`.
+   **Atenção:** `Doca`, `Matricula`, `DataRef` e `Itinerario` têm que ficar como **texto**. Se ficarem como
+   número, o "04" vira "4".
+5. **Avançar**. Em nome, digite exatamente o nome da tabela (`Itinerarios`, `Bipagens`, `ContagemDiaria`,
+   `ResumoDiario`). **Criar**.
 
-**Bipagens** (1 linha por NF bipada)
+Pronto: esse é o banco de dados. Dá para abrir cada lista e ver os dados como numa planilha.
 
-| Coluna | Tipo | Índice |
-|---|---|---|
-| Title | (padrão) = chave de acesso (44 dígitos) | ✔ |
-| Categoria | Texto (`FATURADA`, `INSUCESSO`, `RESGATE`, `MARKETPLACE`) | ✔ |
-| DataRef | Texto `aaaa-mm-dd` | ✔ |
-| MesRef | Texto `aaaa-mm` | ✔ |
-| Ordem | Número | ✔ |
-| Doca, Itinerario, Matricula, Usuario, Lote | Texto | |
+### 1.3 Ligar os índices (5 minutos, evita travar quando passar de 5.000 NFs)
 
-**ContagemDiaria** (a aba FATURAMENTO do dia; o app mantém atualizada)
+Em cada lista: ⚙️ (canto superior direito) **> Configurações da lista > Colunas indexadas > Criar novo índice**.
 
-| Coluna | Tipo |
+| Lista | Criar índice em |
 |---|---|
-| Title | (padrão) = `DataRef|Ordem`, **único + indexado** |
-| DataRef, MesRef | Texto, indexados |
-| Data | Data (somente data) |
-| Ordem | Número |
-| Doca, Bairros, Itinerario, Codigo, Matricula | Texto |
-| Faturadas, Insucessos, Resgates, MP, Total | Número |
+| Bipagens | ChaveAcesso, DataRef, Ordem |
+| ContagemDiaria | Chave, DataRef |
+| ResumoDiario | DataRef |
 
-**ResumoDiario** (o quadro lateral da planilha)
-
-| Coluna | Tipo |
-|---|---|
-| Title | (padrão) = `DataRef`, **único + indexado** |
-| Data | Data |
-| Disponiveis, PresasJ1BNFE, FrotasDisponiveis, FrotasManutencao | Número |
-| Observacao | Várias linhas de texto |
-
-> **Índices são obrigatórios.** Com cerca de 2.000 NFs por dia, a lista Bipagens passa de 5.000 itens em
-> 3 dias. Sem índice em `Title`, `DataRef` e `Ordem`, o SharePoint bloqueia os filtros.
-> O índice fica em **Configurações da lista > Colunas indexadas**.
-
----
+> Alternativa para o TI: o script `sharepoint/criar-listas.ps1` faz o item 1 inteiro automaticamente.
 
 ## 2. Criar o app no Power Apps
 
 1. Em [make.powerapps.com](https://make.powerapps.com), vá em **Criar > Aplicativo de tela em branco**, com
    formato **Telefone** (640 × 1136).
-2. **Dados > Adicionar dados > SharePoint**, escolha o site e marque as 4 listas.
+2. **Dados > Adicionar dados >** digite **SharePoint** **>** escolha o site `faturamentoexpmanaus` e marque
+   as 4 listas.
 3. **Configurações > Geral > Limite de linhas de dados**: `2000`.
 4. **App** (topo da árvore de controles):
    - propriedade **Formulas**: cole o bloco `Formulas` de `powerapps/App.pa.yaml`, sem o `=` inicial se o

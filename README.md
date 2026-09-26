@@ -23,7 +23,8 @@ App em **Power Apps + SharePoint** que junta num lugar só o que hoje está espa
 | Caminho | O que é |
 |---|---|
 | `docs/GUIA.md` | **Passo a passo completo** (comece por aqui) |
-| `sharepoint/criar-listas.ps1` | Cria as 4 listas, índices e carrega os itinerários |
+| `modelos/Expedicao_BancoDeDados.xlsx` | Planilha que vira o banco de dados (SharePoint > Nova lista > Do Excel) |
+| `sharepoint/criar-listas.ps1` | (opcional, para o TI) cria tudo por script |
 | `sharepoint/itinerarios.csv` | 41 linhas de doca/itinerário/código/matrícula tiradas da planilha |
 | `powerapps/App.pa.yaml` | Fórmulas globais (cores, categorias, admins) e OnStart |
 | `powerapps/scr*.pa.yaml` | As 5 telas, prontas para *Colar código* no Power Apps Studio |

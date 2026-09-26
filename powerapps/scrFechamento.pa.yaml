@@ -60,7 +60,7 @@ Screens:
             OnSelect: |-
               =With(
                   {d: Text(dpFech.SelectedDate, "yyyy-mm-dd")},
-                  Set(varResumoF, LookUp(ResumoDiario, Title = d));
+                  Set(varResumoF, LookUp(ResumoDiario, DataRef = d));
                   ClearCollect(colContFech, Filter(ContagemDiaria, DataRef = d))
               );
               Reset(txtDisp); Reset(txtPresas); Reset(txtFrotasDisp); Reset(txtFrotasManut); Reset(txtObs)
@@ -169,7 +169,7 @@ Screens:
               =With(
                   {d: Text(dpFech.SelectedDate, "yyyy-mm-dd")},
                   With(
-                      {reg: LookUp(ResumoDiario, Title = d)},
+                      {reg: LookUp(ResumoDiario, DataRef = d)},
                       IfError(
                           Set(
                               varResumoF,
@@ -178,6 +178,7 @@ Screens:
                                   If(IsBlank(reg), Defaults(ResumoDiario), reg),
                                   {
                                       Title: d,
+                                      DataRef: d,
                                       Data: dpFech.SelectedDate,
                                       Disponiveis: Value(txtDisp.Text),
                                       PresasJ1BNFE: Value(txtPresas.Text),

@@ -33,7 +33,7 @@ let
     Data       = Date.From(Excel.CurrentWorkbook(){[Name = "pData"]}[Content]{0}[Column1]),
     Itins      = Table.SelectColumns(
                    SharePoint.Tables(pSite, [ApiVersion = 15]){[Title = "Itinerarios"]}[Items],
-                   {"Ordem", "Title", "Bairros", "Itinerario", "CodigoItinerario", "Matricula"}),
+                   {"Ordem", "Doca", "Bairros", "Itinerario", "CodigoItinerario", "Matricula"}),
     DoDia      = Table.SelectRows(ContagemDiaria, each [DataRef] = Data),
     Junta      = Table.NestedJoin(Itins, {"Ordem"}, DoDia, {"Ordem"}, "C", JoinKind.LeftOuter),
     Expande    = Table.ExpandTableColumn(Junta, "C", {"Faturadas", "Insucessos", "Resgates", "MP", "Total"}),
@@ -41,7 +41,7 @@ let
                    {"Faturadas", "Insucessos", "Resgates", "MP", "Total"}),
     Ordena     = Table.Sort(Zeros, {{"Ordem", Order.Ascending}}),
     Renomeia   = Table.RenameColumns(Ordena, {
-                   {"Title", "DOCA"}, {"Bairros", "BAIRROS"}, {"Itinerario", "ITINERÁRIO"},
+                   {"Doca", "DOCA"}, {"Bairros", "BAIRROS"}, {"Itinerario", "ITINERÁRIO"},
                    {"CodigoItinerario", "CÓDIGO"}, {"Matricula", "MATRÍCULA"},
                    {"Faturadas", "FATURADAS"}, {"Insucessos", "INSUCESSOS"},
                    {"Resgates", "RESGATES"}, {"MP", "MP"}, {"Total", "TOTAL"}}),
@@ -63,9 +63,9 @@ let
                 {"Total",      each List.Sum([Total]),      Int64.Type}}),
     Resumo  = Table.SelectColumns(
                 SharePoint.Tables(pSite, [ApiVersion = 15]){[Title = "ResumoDiario"]}[Items],
-                {"Title", "Disponiveis", "PresasJ1BNFE", "FrotasDisponiveis", "FrotasManutencao"}),
-    ResumoT = Table.TransformColumnTypes(Resumo, {{"Title", type date}}),
-    Junta   = Table.NestedJoin(PorDia, {"DataRef"}, ResumoT, {"Title"}, "R", JoinKind.LeftOuter),
+                {"DataRef", "Disponiveis", "PresasJ1BNFE", "FrotasDisponiveis", "FrotasManutencao"}),
+    ResumoT = Table.TransformColumnTypes(Resumo, {{"DataRef", type date}}),
+    Junta   = Table.NestedJoin(PorDia, {"DataRef"}, ResumoT, {"DataRef"}, "R", JoinKind.LeftOuter),
     Expande = Table.ExpandTableColumn(Junta, "R",
                 {"Disponiveis", "PresasJ1BNFE", "FrotasDisponiveis", "FrotasManutencao"}),
     Pct     = Table.AddColumn(Expande, "% Faturamento",

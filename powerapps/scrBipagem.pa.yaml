@@ -134,7 +134,7 @@ Screens:
               =If(
                   IsBlank(varItin),
                   "Nenhum selecionado — bipe o código do itinerário ou toque em LISTA",
-                  "DOCA " & varItin.Title & "  •  IT. " & varItin.Itinerario & Char(10) & varItin.Bairros
+                  "DOCA " & varItin.Doca & "  •  IT. " & varItin.Itinerario & Char(10) & varItin.Bairros
               )
             Fill: =If(IsBlank(varItin), RGBA(255, 243, 224, 1), CorClara)
             Color: =If(IsBlank(varItin), RGBA(191, 54, 12, 1), CorEscura)
@@ -206,7 +206,7 @@ Screens:
                               !IsBlank(LookUp(colBipadas, Chave = c)),
                               Notify("Esta NF já está na lista.", NotificationType.Warning),
                               With(
-                                  {ja: LookUp(Bipagens, Title = c && DataRef = Text(Today(), "yyyy-mm-dd"))},
+                                  {ja: LookUp(Bipagens, ChaveAcesso = c && DataRef = Text(Today(), "yyyy-mm-dd"))},
                                   If(
                                       !IsBlank(ja),
                                       Notify("NF " & Value(Mid(c, 26, 9)) & " já registrada hoje na doca " & ja.Doca & " (" & ja.Categoria & ").", NotificationType.Error),
@@ -232,7 +232,7 @@ Screens:
                           Switch(
                               CountRows(m),
                               0, Notify("Código não reconhecido: " & c, NotificationType.Error),
-                              1, Set(varItin, First(m)); Notify("Itinerário " & First(m).Itinerario & " — Doca " & First(m).Title, NotificationType.Success),
+                              1, Set(varItin, First(m)); Notify("Itinerário " & First(m).Itinerario & " — Doca " & First(m).Doca, NotificationType.Success),
                               ClearCollect(colMatchItin, m); Set(varMostrarItins, true)
                           )
                       )
@@ -380,11 +380,12 @@ Screens:
                                   colBipadas As b,
                                   {
                                       Title: b.Chave,
+                                      ChaveAcesso: b.Chave,
                                       Categoria: b.Categoria,
                                       DataRef: dataRef,
                                       MesRef: Left(dataRef, 7),
                                       Ordem: varItin.Ordem,
-                                      Doca: varItin.Title,
+                                      Doca: varItin.Doca,
                                       Itinerario: varItin.Itinerario,
                                       Matricula: varItin.Matricula,
                                       Usuario: User().Email,
@@ -396,7 +397,7 @@ Screens:
                           ClearCollect(colDocaDia, Filter(Bipagens, DataRef = dataRef && Ordem = varItin.Ordem));
                           With(
                               {
-                                  reg: LookUp(ContagemDiaria, Title = dataRef & "|" & Text(varItin.Ordem)),
+                                  reg: LookUp(ContagemDiaria, Chave = dataRef & "|" & Text(varItin.Ordem)),
                                   f: CountRows(Filter(colDocaDia, Categoria = "FATURADA")),
                                   i: CountRows(Filter(colDocaDia, Categoria = "INSUCESSO")),
                                   r: CountRows(Filter(colDocaDia, Categoria = "RESGATE")),
@@ -407,11 +408,12 @@ Screens:
                                   If(IsBlank(reg), Defaults(ContagemDiaria), reg),
                                   {
                                       Title: dataRef & "|" & Text(varItin.Ordem),
+                                      Chave: dataRef & "|" & Text(varItin.Ordem),
                                       DataRef: dataRef,
                                       MesRef: Left(dataRef, 7),
                                       Data: DateValue(dataRef),
                                       Ordem: varItin.Ordem,
-                                      Doca: varItin.Title,
+                                      Doca: varItin.Doca,
                                       Bairros: varItin.Bairros,
                                       Itinerario: varItin.Itinerario,
                                       Codigo: varItin.CodigoItinerario,
@@ -424,7 +426,7 @@ Screens:
                                   }
                               )
                           );
-                          Notify(qtd & " NF(s) enviadas para a Doca " & varItin.Title & " (It. " & varItin.Itinerario & ").", NotificationType.Success);
+                          Notify(qtd & " NF(s) enviadas para a Doca " & varItin.Doca & " (It. " & varItin.Itinerario & ").", NotificationType.Success);
                           Clear(colBipadas);
                           Set(varItin, Blank()),
 
@@ -515,7 +517,7 @@ Screens:
             - lblTileDoca:
                 Control: Label@2.5.1
                 Properties:
-                  Text: ="DOCA " & ThisItem.Title
+                  Text: ="DOCA " & ThisItem.Doca
                   Color: =If(!IsBlank(varItin) && varItin.Ordem = ThisItem.Ordem, Color.White, CorEscura)
                   FontWeight: =FontWeight.Bold
                   Size: =15

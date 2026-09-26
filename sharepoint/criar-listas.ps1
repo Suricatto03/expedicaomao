@@ -45,6 +45,7 @@ function Add-Coluna($lista, $nome, $tipo, [switch]$Indexar, [switch]$Unica) {
 
 # ---------------------------------------------------------------- Itinerarios
 New-Lista "Itinerarios" "Doca"
+Add-Coluna "Itinerarios" "Doca"             Text
 Add-Coluna "Itinerarios" "Ordem"            Number  -Unica
 Add-Coluna "Itinerarios" "Bairros"          Text
 Add-Coluna "Itinerarios" "Itinerario"       Text
@@ -57,6 +58,7 @@ Set-PnPField -List "Itinerarios" -Identity "Ativo" -Values @{ DefaultValue = "1"
 # ---------------------------------------------------------------- Bipagens (1 linha por NF bipada)
 New-Lista "Bipagens" "ChaveAcesso"
 Set-PnPField -List "Bipagens" -Identity "Title" -Values @{ Indexed = $true } | Out-Null
+Add-Coluna "Bipagens" "ChaveAcesso" Text    -Indexar
 Add-Coluna "Bipagens" "Categoria"  Text    -Indexar   # FATURADA | INSUCESSO | RESGATE | MARKETPLACE
 Add-Coluna "Bipagens" "DataRef"    Text    -Indexar   # yyyy-mm-dd
 Add-Coluna "Bipagens" "MesRef"     Text    -Indexar   # yyyy-mm
@@ -70,6 +72,7 @@ Add-Coluna "Bipagens" "Lote"       Text
 # ---------------------------------------------------------------- ContagemDiaria (= aba FATURAMENTO do dia)
 New-Lista "ContagemDiaria" "Chave"          # DataRef|Ordem
 Set-PnPField -List "ContagemDiaria" -Identity "Title" -Values @{ Indexed = $true; EnforceUniqueValues = $true } | Out-Null
+Add-Coluna "ContagemDiaria" "Chave"      Text     -Indexar
 Add-Coluna "ContagemDiaria" "DataRef"    Text     -Indexar
 Add-Coluna "ContagemDiaria" "MesRef"     Text     -Indexar
 Add-Coluna "ContagemDiaria" "Data"       DateTime
@@ -89,6 +92,7 @@ Set-PnPField -List "ContagemDiaria" -Identity "Data" -Values @{ DisplayFormat = 
 # ---------------------------------------------------------------- ResumoDiario (quadro lateral da planilha)
 New-Lista "ResumoDiario" "DataRef"
 Set-PnPField -List "ResumoDiario" -Identity "Title" -Values @{ Indexed = $true; EnforceUniqueValues = $true } | Out-Null
+Add-Coluna "ResumoDiario" "DataRef"           Text     -Indexar
 Add-Coluna "ResumoDiario" "Data"              DateTime
 Add-Coluna "ResumoDiario" "Disponiveis"       Number
 Add-Coluna "ResumoDiario" "PresasJ1BNFE"      Number
@@ -104,6 +108,7 @@ if (Test-Path $CsvItinerarios) {
         if ($existentes -notcontains [int]$_.Ordem) {
             Add-PnPListItem -List "Itinerarios" -Values @{
                 Title            = $_.Doca
+                Doca             = $_.Doca
                 Ordem            = [int]$_.Ordem
                 Bairros          = $_.Bairros
                 Itinerario       = $_.Itinerario

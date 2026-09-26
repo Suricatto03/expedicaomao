@@ -88,7 +88,7 @@ Screens:
                 Control: Label@2.5.1
                 Properties:
                   Text: |-
-                    ="NF " & Value(Mid(ThisItem.Title, 26, 9)) & "  •  " & LookUp(Categorias, Cod = ThisItem.Categoria).Nome
+                    ="NF " & Value(Mid(ThisItem.ChaveAcesso, 26, 9)) & "  •  " & LookUp(Categorias, Cod = ThisItem.Categoria).Nome
                   FontWeight: =FontWeight.Bold
                   Size: =13
                   X: =18
@@ -98,7 +98,7 @@ Screens:
             - lblDetChave:
                 Control: Label@2.5.1
                 Properties:
-                  Text: =ThisItem.Title
+                  Text: =ThisItem.ChaveAcesso
                   Size: =9
                   Color: =RGBA(110, 110, 110, 1)
                   X: =18
@@ -131,7 +131,7 @@ Screens:
                     Remove(colDetalhe, ThisItem);
                     With(
                         {
-                            reg: LookUp(ContagemDiaria, Title = varDetDataRef & "|" & Text(varLinhaDet.Ordem)),
+                            reg: LookUp(ContagemDiaria, Chave = varDetDataRef & "|" & Text(varLinhaDet.Ordem)),
                             f: CountRows(Filter(colDetalhe, Categoria = "FATURADA")),
                             i: CountRows(Filter(colDetalhe, Categoria = "INSUCESSO")),
                             r: CountRows(Filter(colDetalhe, Categoria = "RESGATE")),
@@ -142,6 +142,7 @@ Screens:
                             If(IsBlank(reg), Defaults(ContagemDiaria), reg),
                             {
                                 Title: varDetDataRef & "|" & Text(varLinhaDet.Ordem),
+                                Chave: varDetDataRef & "|" & Text(varLinhaDet.Ordem),
                                 DataRef: varDetDataRef,
                                 MesRef: Left(varDetDataRef, 7),
                                 Data: DateValue(varDetDataRef),
