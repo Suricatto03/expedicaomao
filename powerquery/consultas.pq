@@ -64,8 +64,8 @@ let
                 {"Total",      each List.Sum([Total]),      Int64.Type}}),
     Resumo  = Table.SelectColumns(
                 SharePoint.Tables(pSite, [ApiVersion = 15]){[Title = "ResumoDiario"]}[Items],
-                {"DataRef", "Disponiveis", "PresasJ1BNFE", "FrotasDisponiveis", "FrotasManutencao"}),
-    ResumoT = Table.TransformColumnTypes(Resumo, {{"DataRef", type date}}),
+                {"Title", "Disponiveis", "PresasJ1BNFE", "FrotasDisponiveis", "FrotasManutencao"}),
+    ResumoT = Table.TransformColumnTypes(Table.RenameColumns(Resumo, {{"Title", "DataRef"}}), {{"DataRef", type date}}),
     Junta   = Table.NestedJoin(PorDia, {"DataRef"}, ResumoT, {"DataRef"}, "R", JoinKind.LeftOuter),
     Expande = Table.ExpandTableColumn(Junta, "R",
                 {"Disponiveis", "PresasJ1BNFE", "FrotasDisponiveis", "FrotasManutencao"}),

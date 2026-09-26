@@ -33,6 +33,8 @@ site. Se aparecer "sem permissão" em algum passo, peça isso ao dono do site.
 
    **Atenção:** `Doca`, `Matricula`, `DataRef` e `Itinerario` têm que ficar como **texto**. Se ficarem como
    número, o "04" vira "4".
+   **Título:** o assistente exige que UMA coluna seja "Título". Deixe como Título: `Ordem` (Itinerários),
+   `Categoria` (Bipagens, e depois crie a coluna Categoria), `Chave` (ContagemDiaria) e `DataRef` (ResumoDiario).
 5. **Avançar**. Em nome, digite exatamente o nome da tabela (`Itinerarios`, `Bipagens`, `ContagemDiaria`,
    `ResumoDiario`). **Criar**.
 
