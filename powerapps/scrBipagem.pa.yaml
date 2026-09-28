@@ -207,6 +207,8 @@ Screens:
                               Notify("Chave inválida (dígito verificador não confere). Bipe novamente.", NotificationType.Error),
                               !IsBlank(LookUp(colBipadas, Chave = c)),
                               Notify("Esta NF já está na lista.", NotificationType.Warning),
+                              !IsBlank(LookUp(colEnviando, Chave = c)) || !IsBlank(LookUp(colPendentes, Chave = c)),
+                              Notify("Esta NF está no lote que acabou de ser enviado.", NotificationType.Warning),
                               With(
                                   {ja: LookUp(Bipagens, ChaveAcesso = c && DataRef = Text(Today(), "yyyy-mm-dd"))},
                                   If(
@@ -338,7 +340,7 @@ Screens:
             Text: |-
               ="LIMPAR"
             OnSelect: =Clear(colBipadas); SetFocus(txtChave)
-            DisplayMode: =If(CountRows(colBipadas) = 0 || varEnviando, DisplayMode.Disabled, DisplayMode.Edit)
+            DisplayMode: =If(CountRows(colBipadas) = 0, DisplayMode.Disabled, DisplayMode.Edit)
             Fill: =Color.White
             Color: =RGBA(198, 40, 40, 1)
             BorderColor: =RGBA(198, 40, 40, 1)
@@ -347,76 +349,158 @@ Screens:
             FontWeight: =FontWeight.Bold
             X: =X0
             Y: =If(Largo, 394, Parent.Height - 104)
-            Width: =ColE * 0.3
+            Width: =ColE * 0.22
             Height: =64
       - btnEnviar:
           Control: Classic/Button@2.2.0
           Properties:
-            Text: =If(varEnviando, "ENVIANDO...", "ENVIAR (" & CountRows(colBipadas) & ")")
+            Text: =If(varEnviando, "GRAVANDO " & CountRows(colEnviando) & "...", "ENVIAR (" & CountRows(colBipadas) & ")")
             DisplayMode: =If(CountRows(colBipadas) = 0 || varEnviando, DisplayMode.Disabled, DisplayMode.Edit)
             Fill: =CorPrimaria
             Color: =Color.White
-            Size: =18
+            Size: =If(Largo, 18, 14)
             FontWeight: =FontWeight.Bold
-            X: =X0 + ColE * 0.33
+            X: =X0 + ColE * 0.49
             Y: =If(Largo, 394, Parent.Height - 104)
-            Width: =ColE * 0.67
+            Width: =ColE * 0.51
             Height: =64
             OnSelect: |-
               =If(
                   IsBlank(varItin),
                   Notify("Selecione o itinerário antes de enviar (bipe o código ou toque em LISTA).", NotificationType.Error),
 
+                  varEnviando,
+                  Notify("Aguarde: o lote anterior ainda está gravando.", NotificationType.Warning),
+
+                  // 1) tira o lote da tela na hora; a gravação roda por trás (btnGravar)
+                  //    e você já pode bipar o próximo lote
+                  ClearCollect(
+                      colEnviando,
+                      ForAll(
+                          colBipadas As b,
+                          {
+                              Chave: b.Chave, Numero: b.Numero, Serie: b.Serie, Categoria: b.Categoria, Hora: b.Hora,
+                              DataRef: Text(Today(), "yyyy-mm-dd"),
+                              Ordem: varItin.Ordem, Doca: varItin.Doca, Bairros: varItin.Bairros,
+                              Itinerario: varItin.Itinerario, Codigo: varItin.CodigoItinerario, Matricula: varItin.Matricula
+                          }
+                      )
+                  );
+                  ClearCollect(colUltimoEnvio, colEnviando);
+                  Notify("Gravando " & CountRows(colEnviando) & " NF(s) da Doca " & varItin.Doca & ". Pode continuar bipando.", NotificationType.Information);
+                  Clear(colBipadas);
+                  Set(varItin, Blank());
                   Set(varEnviando, true);
+                  Select(btnGravar);
+                  SetFocus(txtChave)
+              )
+      - btnCopiar:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Text: =If(CountRows(colBipadas) > 0, "COPIAR", "COPIAR ÚLTIMO")
+            OnSelect: |-
+              =If(
+                  CountRows(colBipadas) > 0,
+                  Copy(Concat(Sort(colBipadas, Hora, SortOrder.Ascending), Text(Hora, "dd/mm/yyyy") & Char(9) & "'" & Chave & Char(9) & "'" & Numero & Char(9) & Serie & Char(9) & Coalesce(varItin.Itinerario, "") & Char(9) & Coalesce(varItin.Matricula, "") & Char(9) & Categoria, Char(10))),
+                  Copy(Concat(Sort(colUltimoEnvio, Hora, SortOrder.Ascending), Text(Hora, "dd/mm/yyyy") & Char(9) & "'" & Chave & Char(9) & "'" & Numero & Char(9) & Serie & Char(9) & Itinerario & Char(9) & Matricula & Char(9) & Categoria, Char(10)))
+              );
+              Notify("NFs copiadas. Cole no Excel com Ctrl+V.", NotificationType.Success);
+              SetFocus(txtChave)
+            DisplayMode: =If(CountRows(colBipadas) = 0 && CountRows(colUltimoEnvio) = 0, DisplayMode.Disabled, DisplayMode.Edit)
+            Fill: =Color.White
+            Color: =CorEscura
+            BorderColor: =CorEscura
+            BorderThickness: =2
+            Size: =If(Largo, 13, 10)
+            FontWeight: =FontWeight.Bold
+            X: =X0 + ColE * 0.245
+            Y: =If(Largo, 394, Parent.Height - 104)
+            Width: =ColE * 0.22
+            Height: =64
+      - btnReenviar:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Visible: =CountRows(colPendentes) > 0 && !varEnviando
+            Text: |-
+              ="⚠ " & CountRows(colPendentes) & " NF(s) não gravadas — REENVIAR"
+            OnSelect: =ClearCollect(colEnviando, colPendentes); Clear(colPendentes); Set(varEnviando, true); Select(btnGravar)
+            Fill: =RGBA(239, 108, 0, 1)
+            Color: =Color.White
+            Size: =12
+            FontWeight: =FontWeight.Bold
+            X: =X0
+            Y: =If(Largo, 470, 350)
+            Width: =ColE
+            Height: =48
+      - btnGravar:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Visible: =true
+            Text: |-
+              =""
+            OnSelect: |-
+              =// Grava colEnviando no SharePoint. Chamado por ENVIAR e por REENVIAR (Select).
+              With(
+                  {lote: Text(GUID())},
+                  IfError(
+                      // todas as NFs numa chamada só
+                      Collect(
+                          Bipagens,
+                          ForAll(
+                              colEnviando As b,
+                              {
+                                  Title: b.Chave,
+                                  ChaveAcesso: b.Chave,
+                                  NumeroNF: b.Numero,
+                                  Serie: b.Serie,
+                                  Categoria: b.Categoria,
+                                  DataRef: b.DataRef,
+                                  MesRef: Left(b.DataRef, 7),
+                                  Ordem: b.Ordem,
+                                  Doca: b.Doca,
+                                  Itinerario: b.Itinerario,
+                                  Matricula: b.Matricula,
+                                  Usuario: User().Email,
+                                  Lote: lote
+                              }
+                          )
+                      ),
+                      Set(varErroEnvio, FirstError.Message)
+                  )
+              );
+              // reconta cada doca do lote (1 leitura por doca) e descobre o que realmente gravou
+              Clear(colGravadas);
+              ForAll(
+                  Distinct(colEnviando, DataRef & "|" & Text(Ordem)) As k,
                   With(
-                      {dataRef: Text(Today(), "yyyy-mm-dd"), lote: Text(GUID()), qtd: CountRows(colBipadas)},
-                      IfError(
-                          // 1) grava uma linha por NF
-                          Collect(
-                              Bipagens,
-                              ForAll(
-                                  colBipadas As b,
-                                  {
-                                      Title: b.Chave,
-                                      ChaveAcesso: b.Chave,
-                                      NumeroNF: b.Numero,
-                                      Serie: b.Serie,
-                                      Categoria: b.Categoria,
-                                      DataRef: dataRef,
-                                      MesRef: Left(dataRef, 7),
-                                      Ordem: varItin.Ordem,
-                                      Doca: varItin.Doca,
-                                      Itinerario: varItin.Itinerario,
-                                      Matricula: varItin.Matricula,
-                                      Usuario: User().Email,
-                                      Lote: lote
-                                  }
-                              )
-                          );
-                          // 2) recalcula a contagem da doca no dia (sempre recontando = nunca desalinha)
-                          ClearCollect(colDocaDia, Filter(Bipagens, DataRef = dataRef && Ordem = varItin.Ordem));
+                      {
+                          ref: LookUp(colEnviando, DataRef & "|" & Text(Ordem) = k.Value),
+                          reg: LookUp(ContagemDiaria, Title = k.Value)
+                      },
+                      With(
+                          {doDia: Filter(Bipagens, DataRef = ref.DataRef && Ordem = ref.Ordem)},
+                          Collect(colGravadas, ShowColumns(doDia, ChaveAcesso));
                           With(
                               {
-                                  reg: LookUp(ContagemDiaria, Title = dataRef & "|" & Text(varItin.Ordem)),
-                                  f: CountRows(Filter(colDocaDia, Categoria = "FATURADA")),
-                                  i: CountRows(Filter(colDocaDia, Categoria = "INSUCESSO")),
-                                  r: CountRows(Filter(colDocaDia, Categoria = "RESGATE")),
-                                  m: CountRows(Filter(colDocaDia, Categoria = "MARKETPLACE"))
+                                  f: CountRows(Filter(doDia, Categoria = "FATURADA")),
+                                  i: CountRows(Filter(doDia, Categoria = "INSUCESSO")),
+                                  r: CountRows(Filter(doDia, Categoria = "RESGATE")),
+                                  m: CountRows(Filter(doDia, Categoria = "MARKETPLACE"))
                               },
                               Patch(
                                   ContagemDiaria,
                                   If(IsBlank(reg), Defaults(ContagemDiaria), reg),
                                   {
-                                      Title: dataRef & "|" & Text(varItin.Ordem),
-                                      DataRef: dataRef,
-                                      MesRef: Left(dataRef, 7),
-                                      Data: DateValue(dataRef),
-                                      Ordem: varItin.Ordem,
-                                      Doca: varItin.Doca,
-                                      Bairros: varItin.Bairros,
-                                      Itinerario: varItin.Itinerario,
-                                      Codigo: varItin.CodigoItinerario,
-                                      Matricula: varItin.Matricula,
+                                      Title: k.Value,
+                                      DataRef: ref.DataRef,
+                                      MesRef: Left(ref.DataRef, 7),
+                                      Data: DateValue(ref.DataRef),
+                                      Ordem: ref.Ordem,
+                                      Doca: ref.Doca,
+                                      Bairros: ref.Bairros,
+                                      Itinerario: ref.Itinerario,
+                                      Codigo: ref.Codigo,
+                                      Matricula: ref.Matricula,
                                       Faturadas: f,
                                       Insucessos: i,
                                       Resgates: r,
@@ -424,17 +508,30 @@ Screens:
                                       Total: f + i + r + m
                                   }
                               )
-                          );
-                          Notify(qtd & " NF(s) enviadas para a Doca " & varItin.Doca & " (It. " & varItin.Itinerario & ").", NotificationType.Success);
-                          Clear(colBipadas);
-                          Set(varItin, Blank()),
-
-                          Notify("Falha ao enviar: " & FirstError.Message & " — as NFs continuam na lista, tente de novo.", NotificationType.Error)
+                          )
                       )
-                  );
-                  Set(varEnviando, false);
-                  SetFocus(txtChave)
-              )
+                  )
+              );
+              // o que não gravou fica em Pendentes (botão REENVIAR); nada é gravado duas vezes
+              Collect(colPendentes, Filter(colEnviando, !(Chave in colGravadas.ChaveAcesso)));
+              If(
+                  CountRows(colPendentes) = 0,
+                  Notify(CountRows(colEnviando) & " NF(s) gravadas.", NotificationType.Success),
+                  Notify(CountRows(colPendentes) & " NF(s) não foram gravadas (" & Coalesce(varErroEnvio, "falha de conexão") & "). Toque em REENVIAR.", NotificationType.Error)
+              );
+              Set(varErroEnvio, Blank());
+              Clear(colEnviando);
+              Set(varEnviando, false)
+            X: =0
+            Y: =0
+            Width: =1
+            Height: =1
+            Fill: =Color.Transparent
+            Color: =Color.Transparent
+            BorderThickness: =0
+            HoverFill: =Color.Transparent
+            PressedFill: =Color.Transparent
+            TabIndex: =-1
       - lblVersaoBip:
           Control: Label@2.5.1
           Properties:

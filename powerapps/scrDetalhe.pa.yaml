@@ -62,7 +62,26 @@ Screens:
             Align: =Align.Center
             X: =X0
             Y: =78
-            Width: =Conteudo
+            Width: =Conteudo - 130
+            Height: =36
+      - btnCopiarDet:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Text: |-
+              ="COPIAR"
+            OnSelect: |-
+              =Copy(Concat(Sort(colDetalhe, Created, SortOrder.Ascending), Text(DateValue(DataRef), "dd/mm/yyyy") & Char(9) & "'" & ChaveAcesso & Char(9) & "'" & NumeroNF & Char(9) & Serie & Char(9) & Itinerario & Char(9) & Matricula & Char(9) & Categoria, Char(10)));
+              Notify("NFs copiadas. Cole no Excel com Ctrl+V.", NotificationType.Success)
+            DisplayMode: =If(CountRows(colDetalhe) = 0, DisplayMode.Disabled, DisplayMode.Edit)
+            Fill: =Color.White
+            Color: =CorEscura
+            BorderColor: =CorEscura
+            BorderThickness: =2
+            Size: =12
+            FontWeight: =FontWeight.Bold
+            X: =X0 + Conteudo - 120
+            Y: =78
+            Width: =120
             Height: =36
       - galDetalhe:
           Control: Gallery@2.15.0

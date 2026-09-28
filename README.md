@@ -40,3 +40,7 @@ App em **Power Apps + SharePoint** que junta num lugar só o que hoje está espa
 - `% Faturamento = Faturadas ÷ Disponíveis`
 - A contagem da doca é sempre **recontada** a partir das NFs (não é "somar +1"), então estornos e vários
   coletores simultâneos não desalinham os números.
+- **Envio sem travar:** ao tocar em ENVIAR o lote sai da tela e grava por trás; dá para bipar o próximo
+  lote enquanto isso. O que não gravar vai para "REENVIAR" (sem duplicar nada).
+- **COPIAR:** copia as NFs (Data, Chave, NF, Série, Itinerário, Matrícula, Status) separadas por colunas,
+  para colar no Excel. Depois de enviar, copia o último lote. No Detalhe da doca também há COPIAR.

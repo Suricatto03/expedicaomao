@@ -47,4 +47,11 @@ App:
       );
       ClearCollect(colMatchItin, FirstN(colItinerarios, 0));
       ClearCollect(colBipadas, {Chave: "", Numero: "", Serie: "", CNPJ: "", Categoria: "", Hora: Now()});
-      Clear(colBipadas)
+      Clear(colBipadas);
+      // lote em gravação / último enviado / não gravados (mesmo formato)
+      ClearCollect(colEnviando, {Chave: "", Numero: "", Serie: "", Categoria: "", Hora: Now(), DataRef: "", Ordem: 0, Doca: "", Bairros: "", Itinerario: "", Codigo: "", Matricula: ""});
+      ClearCollect(colUltimoEnvio, colEnviando);
+      ClearCollect(colPendentes, colEnviando);
+      Clear(colEnviando); Clear(colUltimoEnvio); Clear(colPendentes);
+      ClearCollect(colGravadas, {ChaveAcesso: ""}); Clear(colGravadas);
+      Set(varErroEnvio, "")
